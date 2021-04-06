@@ -1,0 +1,11 @@
+-- Command line arguments are arrays/tables!
+-- s://www.youtube.com/watch?v=1YMplg5ihYI&list=PLaiPn4ewcbkHYflo2jl0OuNaHK6Mj-koG&index=7&t=15s
+
+-- Pass arguments when running a program
+local tArgs = {...}
+local numMove = tArgs[1]
+local extra = tArgs[2]
+print("First: "..numMove.." Second: "..extra)
+-- make sure to pass an integer and word when running the program!
+-- ex: CommandLineArguments 3 test
+-- Use this to do start programs like turtle.rotate 8

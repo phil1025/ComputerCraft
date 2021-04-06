@@ -1,0 +1,505 @@
+--> Look at: https://pastebin.com/e0UksEtT
+
+-- ********** Changelog 03.04.21 **********
+-- fixed gravel/sand bug
+-- .selectBestSlot() is now commented out, function returns wrong results (mostly doesnt find)
+-- atm slot selection for digs happens automatically
+-- better process info
+-- ****************************************
+
+term.clear()
+term.setCursorPos(1,1)
+
+print("  **********************************")
+print("  ****** ConstructTunnel 1.01 ******")
+print("  **********************************")
+
+-- slot 1       = fuel
+-- slot 2-12    = mined items
+-- slot 13      = building material bottom
+-- slot 14      = building material top
+-- slot 15      = building material left
+-- slot 16      = building material right
+
+--boolean result	turtle.compare()	Detects if the block in front is the same as the one in the currently selected slot	1.31
+--boolean result	turtle.compareUp()	Detects if the block above is the same as the one in the currently selected slot	?
+--boolean result	turtle.compareDown()	Detects if the block below is the same as the one in the currently selected slot	?
+--boolean result	turtle.compareTo(number slot)	Compare the current selected slot and the given slot to see if the items are the same. Returns true if they are the same, false if not.	1.4
+--boolean success	turtle.drop([number count])
+
+print("")
+
+local tArgs = {...}
+if tArgs[1] == "help" then
+    print("Info:")
+    print("- Inventory reservations:")
+    print("  slot 1    = fuel")
+    print("  slot 2-12 = mined items")
+    print("  slot 13   = building material bottom")
+    print("  slot 14   = building material top")
+    print("  slot 15   = building material left")
+    print("  slot 16   = building material right")
+    return
+else
+    print("Start program with argument |help| for more info => ContructTunnel help")
+    print("")
+end
+
+-- Returns true if succeeded, else false
+local function resolveFuel(threshold, index)
+    if turtle.getFuelLevel() < threshold then
+        if turtle.getItemCount(index) > 0 then
+            --local selIndex = turtle.getSelectedSlot() => 1.6
+            turtle.select(index)
+            local usedItems = 0
+            while turtle.getFuelLevel() < threshold and turtle.getItemCount(index) do
+                turtle.refuel(1)
+                usedItems = usedItems + 1
+            end
+            --turtle.setSelectedSlot(selIndex)
+            print("Refueled [slot "..tostring(index).."] using "..tostring(usedItems).." items => fuelLevel: "..tostring(turtle.getFuelLevel()))
+        end
+    end
+    return turtle.getFuelLevel() >= threshold
+end
+
+-- TO Turtle API => unlocalize!
+local function compareDirectionWithSlot(direction, slotIndex) -- <direction> => "fwd", "up", "dwn" / no or wrong direction = forward
+    local match = false
+    if direction == "up" then
+        match = turtle.compareUp(slotIndex)
+        print(" -> slot: "..tostring(slotIndex).." dir: "..tostring(direction).." match: "..tostring(match))
+    elseif direction == "dwn" then
+        match = turtle.compareDown(slotIndex)
+        print(" -> slot: "..tostring(slotIndex).." dir: "..tostring(direction).." match: "..tostring(match))
+    elseif direction == "fwd" then
+        match = turtle.compare(slotIndex)
+        print(" -> slot: "..tostring(slotIndex).." dir: "..tostring(direction).." match: "..tostring(match))
+    else
+        print("Unknown direction in funct ConstructTunnel.compareDirectionWithSlot => "..tostring(direction))
+        print("Use direction string: fwd, up or down") 
+    end
+    return match
+end
+
+-- TO Turtle API => unlocalize!
+-- Compares each slot with the type of block in direction n and returns a list with matching slot indexes
+local function getSlotsForBlockType(direction) -- <direction> => "fwd", "up", "dwn" / no or wrong direction = forward
+    local matchingSlots = {}
+    local index = 1
+    for i = 1, 16 do
+        local match = compareDirectionWithSlot(direction, i)
+        if match then
+            matchingSlots[index] = i
+            index = index + 1
+        end
+    end
+    return matchingSlots
+end
+
+-- TO Turtle API => unlocalize!
+local function getBestSlot(direction) -- <direction> => "fwd", "up", "dwn" / no or wrong direction = forward
+    local slotIndex = -1
+    --[[ DOESNT WORK: turtle.getSelectedSlot() => 1.6
+    local selectedSlot = turtle.getSelectedSlot() => 1.6
+    if compareDirectionWithSlot(direction, selectedSlot) then
+        if 	turtle.getItemSpace(selectedSlot) > 0 then
+            slotIndex = selectedSlot
+        end
+    end
+    --]]
+    if slotIndex == -1 then -- obsolete without upper part!
+        local matchingSlots = getSlotsForBlockType(direction)
+        print("matchingSlots len: "..tostring(table.getn(matchingSlots)))
+        for i = 1, #matchingSlots do
+            local index = matchingSlots[i]
+            if turtle.getItemSpace(index) > 0 then
+                slotIndex = i
+                break
+            end
+        end
+    end
+    if slotIndex == -1 then
+        for i = 1, 16 do
+            if turtle.getItemCount(i) == 0 then
+                slotIndex = i
+                break
+            end
+        end
+    end
+    return slotIndex
+end
+
+--[[ --> PROBLEM WITH getBestSlot, maybe turtle.compare doesnt really work in v1.5?
+local function selectBestSlot(direction) -- <direction> => "fwd", "up", "dwn" / no or wrong direction = forward
+    local slotIndex = getBestSlot(direction)
+    if slotIndex == -1 then
+        print("No free slot found!")
+        return false
+    end
+    turtle.select(slotIndex)
+    return true
+end
+--]]
+
+local function build(side) -- <side> => "left", "right", "top", "bottom"
+    local slotIndex = -1
+    local success = false
+    if side == "left" then
+        slotIndex = 15
+        if turtle.getItemCount(slotIndex) > 0 then
+            turtle.select(slotIndex)
+            success = turtle.place()
+        else
+            print("Unable to build "..side.." => slot "..tostring(slotIndex).." is empty!")
+        end
+    elseif side == "right" then
+        slotIndex = 16
+        if turtle.getItemCount(slotIndex) > 0 then
+            turtle.select(slotIndex)
+            success = turtle.place()
+        else
+            print("Unable to build "..side.." => slot "..tostring(slotIndex).." is empty!")
+        end
+    elseif side == "top" then
+        slotIndex = 14
+        if turtle.getItemCount(slotIndex) > 0 then
+            turtle.select(slotIndex)
+            success = turtle.placeUp()
+        else
+            print("Unable to build "..side.." => slot "..tostring(slotIndex).." is empty!")
+        end
+    elseif side == "bottom" then
+        slotIndex = 13
+        if turtle.getItemCount(slotIndex) > 0 then
+            turtle.select(slotIndex)
+            success = turtle.placeDown()
+        else
+            print("Unable to build "..side.." => slot "..tostring(slotIndex).." is empty!")
+        end
+    end
+    return success
+end
+
+-- Digs one tunnel segment  
+local function digLayer(height, autoFix, useDefault)
+    local waitTime = 1.25
+    local successPlace = false
+    local successDig = false
+    --local blocksPlaced = 0
+    --local blocksDigged = 0
+    
+    local digInfo = {}
+    digInfo.success = false
+    digInfo.blocksDigged = 0
+    digInfo.blocksPlaced = 0
+    
+    -- dig block in front
+    while turtle.detect() do
+        --selectBestSlot("fwd")
+        successDig = turtle.dig()
+        if successDig then
+            digInfo.blocksDigged = digInfo.blocksDigged + 1
+        end
+        sleep(waitTime)
+    end
+    
+    -- move forward into layer
+    turtle.forward()
+    
+    -- build bottom center => slot 13
+    if autoFix and not turtle.detectDown() then
+        successPlace = build("bottom")
+        if not successPlace then
+            digInfo.success = false
+            return digInfo
+        else
+            digInfo.blocksPlaced = digInfo.blocksPlaced + 1
+        end
+    end
+    
+    -- turn left
+    turtle.turnLeft()
+    
+    -- dig forward (towards left)
+    while turtle.detect() do
+        --selectBestSlot("fwd")
+        successDig = turtle.dig()
+        if successDig then
+            digInfo.blocksDigged = digInfo.blocksDigged + 1
+        end
+        sleep(waitTime)
+    end
+    
+    -- move forward (towards left)
+    turtle.forward()
+    
+    -- build bottom left => slot 13
+    if autoFix and not turtle.detectDown() then
+        successPlace = build("bottom")
+        if not successPlace then
+            digInfo.success = false
+            return digInfo
+        else
+            digInfo.blocksPlaced = digInfo.blocksPlaced + 1
+        end
+    end
+    
+    
+    for i = 1, (height - 1) do -- dig up / build left wall
+        -- build left wall => slot 15
+        if autoFix and not turtle.detect() then
+            successPlace = build("left")
+            if not successPlace then
+                digInfo.success = false
+                return digInfo
+            else
+                digInfo.blocksPlaced = digInfo.blocksPlaced + 1
+            end
+        end
+        
+        -- dig up (left side)
+        while turtle.detectUp() do
+            --selectBestSlot("up")
+            successDig = turtle.digUp()
+            if successDig then
+                digInfo.blocksDigged = digInfo.blocksDigged + 1
+            end
+            sleep(waitTime)
+        end
+        
+        -- move up (left side)
+        turtle.up()
+    end
+    
+    -- build last left wall => slot 15
+    if autoFix and not turtle.detect() then
+        successPlace = build("left")
+        if not successPlace then
+            digInfo.success = false
+            return digInfo
+        else
+            digInfo.blocksPlaced = digInfo.blocksPlaced + 1
+        end
+    end
+    
+    -- turn right
+    turtle.turnRight()
+    
+    -- build top left = slot 14
+    if autoFix and not turtle.detectUp() then
+        successPlace = build("top")
+        if not successPlace then
+            digInfo.success = false
+            return digInfo
+        else
+            digInfo.blocksPlaced = digInfo.blocksPlaced + 1
+        end
+    end
+    
+    -- turn right
+    turtle.turnRight()
+    
+    -- dig forward (towards right)
+    while turtle.detect() do
+        --selectBestSlot("fwd")
+        successDig = turtle.dig()
+        if successDig then
+            digInfo.blocksDigged = digInfo.blocksDigged + 1
+        end
+        sleep(waitTime)
+    end
+    
+    -- move forward (towards right)
+    turtle.forward()
+    
+    -- build top center = slot 14
+    if autoFix and not turtle.detectUp() then
+        successPlace = build("top")
+        if not successPlace then
+            digInfo.success = false
+            return digInfo
+        else
+            digInfo.blocksPlaced = digInfo.blocksPlaced + 1
+        end
+    end
+    
+    if height <= 3 then
+        -- dig down
+        if turtle.detectDown() then
+            --selectBestSlot("dwn")
+            successDig = turtle.digDown()
+            if successDig then
+                digInfo.blocksDigged = digInfo.blocksDigged + 1
+            end
+        end
+    else
+        -- if more than 3 blocks height has to move down and up
+        for i = 1, (height - 1) do -- center down
+            --selectBestSlot("dwn")
+            if turtle.detectDown() then
+                successDig = turtle.digDown()
+                if successDig then
+                    digInfo.blocksDigged = digInfo.blocksDigged + 1
+                end
+            end
+            -- move down
+            turtle.down()
+        end
+        -- move back up
+        for i = 1, (height - 1) do -- center up
+            turtle.up()
+        end
+    end
+    
+    while turtle.detect() do
+        --selectBestSlot("fwd")
+        successDig = turtle.dig()
+        if successDig then
+            digInfo.blocksDigged = digInfo.blocksDigged + 1
+        end
+        sleep(waitTime)
+    end
+    
+    -- move forward (towards right)
+    turtle.forward()
+    
+    -- build top center = slot 14
+    if autoFix and not turtle.detectUp() then
+        successPlace = build("top")
+        if not successPlace then
+            digInfo.success = false
+            return digInfo
+        else
+            digInfo.blocksPlaced = digInfo.blocksPlaced + 1
+        end
+    end
+
+    for i = 1, (height - 1) do -- dig down / build right wall
+     
+        -- build right wall => slot 16
+        if autoFix and not turtle.detect() then
+            successPlace = build("right")
+            if not successPlace then
+                digInfo.success = false
+                return digInfo
+            else
+                digInfo.blocksPlaced = digInfo.blocksPlaced + 1
+            end
+        end
+        
+        -- move down (right side)
+        if turtle.detectDown() then
+            --selectBestSlot("dwn")
+            successDig = turtle.digDown()
+            if successDig then
+                digInfo.blocksDigged = digInfo.blocksDigged + 1
+            end
+        end
+        
+        -- move down (right side)
+        turtle.down()
+    end
+    
+    -- build last right wall => slot 16
+    if autoFix and not turtle.detect() then
+        successPlace = build("right")
+        if not successPlace then
+            digInfo.success = false
+            return digInfo
+        else
+            digInfo.blocksPlaced = digInfo.blocksPlaced + 1
+        end
+    end
+
+    -- turn left
+    turtle.turnLeft()
+    
+    -- build bottom right => slot 16
+    if autoFix and not turtle.detectDown() then
+        successPlace = build("bottom")
+        if not successPlace then
+            digInfo.success = false
+            return digInfo
+        else
+            digInfo.blocksPlaced = digInfo.blocksPlaced + 1
+        end
+    end
+    
+    -- turn left
+    turtle.turnLeft()
+    
+    -- dig forward (towards left) ... is the start block, just in case...
+    while turtle.detect() do
+        --selectBestSlot("fwd")
+        successDig = turtle.dig()
+        if successDig then
+            digInfo.blocksDigged = digInfo.blocksDigged + 1
+        end
+        sleep(waitTime)
+    end
+    
+    -- move forward (towards left, onto starting position)
+    turtle.forward()
+    
+    -- turn right (into starting position)
+    turtle.turnRight()
+    
+    digInfo.success = true
+    return digInfo
+end
+
+local function main(distance, height, autoFix, useDefault)
+    local layer = 1
+    local fuelLevelThreshold = 50
+    local totalBlocksDigged = 0
+    local totalBlocksPlaced = 0
+    
+    for i = 1, distance do
+        local fuelLevel = turtle.getFuelLevel()
+        print("  - Digging layer "..tostring(layer).." fuelLevel: "..tostring(fuelLevel))
+        print("    ...")
+        if fuelLevel < fuelLevelThreshold then
+            local refueled = resolveFuel(fuelLevelThreshold, 1)
+            if not refueled then
+                print("No fuel!")
+                return
+            end
+        end
+        layer = layer + 1
+        local digInfo = digLayer(height, autoFix, useDefault)
+        if not digInfo.success then
+            print(" function digLayer() was not successful!")
+            break
+        else
+            totalBlocksDigged = totalBlocksDigged + digInfo.blocksDigged
+            totalBlocksPlaced = totalBlocksPlaced + digInfo.blocksPlaced
+            local x, y = term.getCursorPos()
+            term.setCursorPos(1, y - 1)
+            print("   > mined:  (layer): "..tostring(digInfo.blocksDigged).." total: "..totalBlocksDigged)
+            print("   > placed: (layer): "..tostring(digInfo.blocksPlaced).." total: "..totalBlocksPlaced)
+        end
+    end
+end
+
+--print("")
+term.write("Enter distance: ")
+local distance = tonumber(read())
+--print("")
+
+term.write("Enter height: ")
+local height = tonumber(read())
+--print("")
+
+term.write("Allow autoFix (y/n): ")
+local allowAutoFix = tostring(read()) == "y"
+--print("")
+
+term.write("Allow to use cobblestone/dirt if no resources found (y/n): ")
+local useDefaults = tostring(read()) == "y"
+print("")
+
+print("Started digging...")
+main(distance, height, allowAutoFix, useDefaults)
+print("")
+print("Program end")

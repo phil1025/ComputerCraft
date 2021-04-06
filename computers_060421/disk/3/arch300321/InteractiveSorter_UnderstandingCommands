@@ -1,0 +1,36 @@
+--http://www.computercraft.info/forums2/index.php?/topic/13024-luamisc-peripheralsinteractive-sorter-help-understanding-commands/
+
+--If an item enters the interactive sorter, 
+--it emits the event "isort_item" like this:
+--event, itemID, ammount = os.pullEvent()
+
+--So if you then wrap it, 
+--and use its functions to sort items, 
+--you can sort items that enter it like the following:
+
+print("Enter a side: ")
+side = read()
+
+s = peripheral.wrap(side) -- or any other side
+direction = 3 -- Or any other number, read the miscPeripherals topic for the directions
+while true do
+  event, itemID, amount = os.pullEvent()
+  s.sort(direction, amount)
+  print(itemID)
+  print(amount)
+end
+
+--If you want specific directions for certain items to go in, 
+--then you can make a table, 
+--and have it check the table for matches and stuff, 
+--if its a match go direction 1, 
+--if not, go direction 5 or something similiar. 
+--I have my own system set up which reads items from 
+--a website link, depending on its response, 
+--it sends it to different directions. Yes, 
+--this means that it doesn't know the items name, 
+--what kind of item it is, or anything, 
+--only the itemID of the item. 
+--So if you want specific sort directions, 
+--you must have a table or system where it gathers this 
+--information from.

@@ -1,0 +1,49 @@
+-- functions example
+-- s://www.youtube.com/watch?v=rUnW8QnuDNM
+-- NOTE: Always define functions first!
+
+
+function getPass()
+  local pass = ""
+  term.write("Please enter the password: ")
+  pass = read()
+  if (pass ~= "dw20") then
+    print("Wrong Password")
+   else
+    print("Correct Password")
+  end
+end
+
+print("Starting Program")
+getPass()
+
+print("")
+
+-- Functions with variables and returns
+
+function getPass_01(checkPass)
+  local pass = ""
+  term.write("Please enter your password: ")
+  pass = read()
+  if (pass ~= checkPass) then
+    print("Wrong Password")
+    return false
+  else
+    print("Correct Password") 
+    return true
+  end
+end
+
+-- Main Program Below
+
+a = getPass_01("dw20")
+print(a)
+b = getPass_01("password")
+print(b)
+
+while not getPass_01("LUA") do
+  print("Please write LUA")
+end
+
+print("")
+

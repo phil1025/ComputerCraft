@@ -1,0 +1,7 @@
+os.loadAPI("C/Programs/APIs/apiManager/apiManager")
+api = apiManager
+if apiManager ~= nil then
+    print("using apiManager")
+else
+    print("C/boot.sys: apiManager not found")
+end

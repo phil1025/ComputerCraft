@@ -1,0 +1,69 @@
+--==MiscPeripherals UUID Reader==
+--found at: http://www.computercraft.info/forums2/index.php?/topic/8397-apimiscperipherals-interactive-sorter-idmeta-reader-api/
+--source: https://pastebin.com/dUh038df
+--NOTE: unclear if NeverCast updated the code.. 
+--      many comments point out bugs. 
+--      Fix if needed!
+--*********************************************
+
+--[[ Code by NeverCast
+     This should be loaded like a typical api
+     Feel free to name it what you like
+--]]
+
+local directions = { [0]=0,[1]=1,[2]=2,[3]=3,[4]=4,[5]=5,["down"] = 0, ["up"] = 1, ["-Z"] = 2, ["+Z"] = 3, ["-X"] = 4, ["+X"] = 5, ["+Y"] = 1, ["-Y"] = 0}
+directions.south = directions["+Z"]
+directions.east = directions["+X"]
+directions.north = directions["-Z"]
+directions.west = directions["-X"]
+ 
+-- Gets the Unique ID based on the ID and Meta
+function getID(id, meta)
+  if meta == nil then
+    meta = 27268
+  else
+    meta = bit.bxor(meta, 0x6E6C)
+  end
+  local uuid = bit.bxor(id, 0x4F89) * 0x8000 + bit.bxor(meta, 0x3A69)
+  return uuid
+end
+ 
+-- Get a stack table from a single uuid and amount
+-- This does all the math to reverse the unique ID algorithm that RG wrote.
+-- Valid for version 2.3
+function getStack(uuid, c)
+        -- Reverse RG's fancy math
+        local subt = bit.band(uuid, 0x7fff)
+        local dexorm = bit.bxor(subt, 0x3a69)
+        local metadata = nil
+        if dexorm ~= 28262 then -- item takes dmg
+                metadata = bit.bxor(dexorm, 0x6e6c)
+        end
+        local id = bit.bxor((uuid-subt)/0x8000, 0x4f89)
+        -- put it in to a nice table
+        local stack = {}
+        stack.amount = c
+        stack.id = id
+        stack.meta = metadata
+        return stack
+end
+ 
+-- Get stacks from an Interactive Sorter
+-- direction   : the direction of the Interactive Sorter Peripheral
+-- invDirection: the direction of the inventory from the peripheral
+-- valid options for invDirection are 0,1,2,3,4,5 ( original values),
+-- north, south, east, west, up, down, and the +/-X,Y,Z strings.
+-- (see directions variable)
+function getStacks(direction, invDirection)
+        if not peripheral.isPresent(direction) then
+                return false, "No Peripheral"
+        end
+        if peripheral.getType(direction) ~= "interactiveSorter" then
+                return false, "Not a sorter"
+        end
+        local stacks = {}
+        for uuid,count in pairs(peripheral.call(direction, "list", directions[invDirection])) do
+                table.insert(stacks, getStack(uuid, count))
+        end
+        return true, stacks    
+end
