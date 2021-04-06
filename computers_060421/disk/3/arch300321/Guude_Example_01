@@ -1,0 +1,4 @@
+--https://youtu.be/90p7BCJXBpY?t=1179
+
+p = peripheral.wrap("top")
+p.extract(4, 667309062, 5, 1)

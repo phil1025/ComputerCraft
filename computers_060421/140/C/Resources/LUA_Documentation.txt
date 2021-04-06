@@ -1,0 +1,623 @@
+LUA Documentation
+
+
+NOTE: 	Computers and Turtles must be labeled in order to store programs permanentely, otherwise they 	change ID each time they are set up!
+
+NOTE: 	for "~, {}, [],..." switch to american keyboard (alt+shift) and then shift + ^
+	OR actually it works fine to use strg + alt + n => just do it twice if Editor switches to Save/Exit/Print!
+	OR write in an editor and paste to /Computers/...
+
+--NOTE: ComputerCraft 1.5 does not yet provide Networking Cables and Wired Modems!
+--	=> The only way to not have peripherals like a monitor not placed near its actual computer is to
+--	      use wireless modems and send data from a computer to another,
+--	      that is connected to a monitor.
+–                  OR actually maybe „Bundled Cables“ from RedPower work with the Redstone/Colors APIS => https://tekkitclassic.fandom.com/wiki/CC_and_Redpower_APIs#:~:text=ComputerCraft%20can%20interact%20with%20the,cables%20in%20the%20bundled%20cables.
+
+https://www.youtube.com/playlist?list=PLaiPn4ewcbkHYflo2jl0OuNaHK6Mj-koG
+
+–==Pastebin posting==
+-- pastebin put <filename> → uploads to pastebin
+– pastebin get <code> <filename> → download from pastebin
+-- ... needs change in computercraft config (http)
+– … makes ComputerCraft´s disk drives obsolete
+
+--==Edit files outside of Minecraft==
+Notepad++, LUAEditorA0.9.8
+
+-- ==Copy programs to disk==
+switch to LUA
+write: fs.copy("yourProgram", "disk/yourProgram")
+
+--==Copy program to turtle==
+- place a disk drive next to turtle (NOTE: not to a side with a module attached!)
+- type command: cp <source> <destination> => ex: cp disk/Delivery Delivery
+
+--==Move files==
+ex: move <yourfile> <disk/yourfile>
+
+–==“startup“ files==
+- Computer will boot files name „startup“ at startup
+- Can also be on disk, infact startup files on disk have priority!
+
+-- ==Label computers/disks etc.==
+get => label get right disk 
+set => label set right disk "myDisk"
+
+--== Computer ID´s==
+type: id in console to lookup a computer´s ID
+
+--==Comments==
+A comment starts with a double hyphen (--) anywhere outside a string. They run until the end of the line. You can comment out a full block of code by surrounding it with--[[ and--]]. To uncomment the same block, simply add another hyphen to the first enclosure, as in---[[.
+-- Single line commented out
+--[[ Entire block commented out
+print( 10 )
+print( 15 )
+--]]
+
+--==Hello World==
+term.write("BLA") -- writes line without new line
+print("HelloWorld") -- writes line and sets new line
+print("WelloHorld")
+term.clear() -- clears terminal
+term.setCursorPos(1, 1) -- sets cursor pos to line pos xy
+print("HiThere")
+
+--==Wait for Seconds==
+sleep(0.5) => code pauses for 0.5 seconds
+
+--==Variables==
+-- s://www.youtube.com/watch?v=ieeOS-p2PD0
+
+local x
+x = 5
+local y = 20
+
+print((x+1) + 1)
+
+-- basic math
+print(x / y)
+print(y / x)
+print(x * 5)
+print(y^2)
+
+-- bools
+local bool = true
+print(bool)
+print(not bool) -- "!" NOT
+
+-- merge strings
+local h = "Hello"
+local w = "World"
+print("h: "..h)
+print("w: "..w)
+print("h+w: "..h.." "..w)
+
+-- User input / scanner
+local info
+term.write("Please enter a value: ")
+info = read()
+print("You entered "..info)
+
+--==Conditional Statements==
+-- s://www.youtube.com/watch?v=vZbzCWtWtyY
+
+local x = 5
+local y = 2
+
+print("Variable x: "..x)
+print("Variable y: "..y)
+
+if x==5 then
+    print("High")
+    print("Five!")
+end
+
+print("Done!")
+
+-- if then, elseif then, else
+if x==5 then
+  print("Im 5")
+elseif x<5 then
+  print("x < 5")
+  print("Smaller 5")
+else
+  print("NOT 5")
+end
+
+-- and statement
+if x>5 and y>5 then
+  print("Both greater!")
+else
+  print("Not both greater")
+end
+
+-- or statement
+if (x>5) or (y<5) then
+  print("One is greater!")
+end
+
+--==Loops==
+-- 3 different kinds of loops (for, while, repeat until)
+
+--print("Loop Examples")
+--print("")
+
+-- NOTE: in LUA for loops include the highest index!
+
+--FOR LOOPS
+print("Simple For Loop")
+for i=0,2 do
+  print("Current Position: "..i)
+end
+
+--print("")
+print("**** With defined interval ****")
+for i = 0, 4, 2 do
+  print("Current Position: "..i)
+end
+
+-- BREAKS
+--print("")
+print("**** Breaks ****")
+for i = 0, 3 do
+  print("Current Position: "..i)
+  if (i == 2) then
+    print(i.." => BREAK")
+    break
+  end  
+end
+
+-- WHILE LOOPS
+--print("")
+print("**** While Loop ****")
+local x = 0
+
+while x < 3 do
+  print("x="..x)
+  x= x+1
+end
+
+-- REPEAT LOOPS
+print("**** Repeat Loop ****")
+local y = 6
+repeat
+  print("Y: "..y)
+until (y > 5)
+
+--==WHILE LOOP EXAMPLE (PASSWORD)==
+local pw = ""
+while pw ~= "dw20" do
+  term.write("Enter Password: ")
+  pw = read()
+end
+print("Correct Password entered")
+
+--==FUNCTIONS==
+-- s://www.youtube.com/watch?v=rUnW8QnuDNM
+-- NOTE: Always define functions first!
+
+function getPass()
+  local pass = ""
+  term.write("Please enter the password: ")
+  pass = read()
+  if (pass ~= "dw20") then
+    print("Wrong Password")
+   else
+    print("Correct Password")
+  end
+end
+
+print("Starting Program")
+getPass()
+
+print("")
+
+-- Functions with variables and returns
+function getPass_01(checkPass)
+  local pass = ""
+  term.write("Please enter your password: ")
+  pass = read()
+  if (pass ~= checkPass) then
+    print("Wrong Password")
+    return false
+  else
+    print("Correct Password") 
+    return true
+  end
+end
+
+-- Main Program Below
+
+a = getPass_01("dw20")
+print(a)
+b = getPass_01("password")
+print(b)
+
+while not getPass_01("LUA") do
+  print("Please write LUA")
+end
+
+print("")
+
+--==TABLES  / ARRAYS==
+
+--http://www.computercraft.info/forums2/index.php?/topic/15760-how-to-use-tables/
+--Part I - Creating a table 
+
+--A table is a list of values, which are all stored under one variable.
+--In Lua, a table is an associative array, which means that any values 
+--stored in one are referenced by a key, which can be a number, string, 
+--boolean or even another table!
+
+--To make a table, simply do this:
+local myTable = {}
+
+--The variable myTable is now an empty table.
+
+--Part II - Numbers as keys 
+
+--If you already have a table, you can insert a value referenced by a 
+--number into the table with one of these methods:
+
+-- This...
+myTable[1] = "This is item 1 of the table"
+-- ... does the same as this
+myTable:insert(1, "This is item 1 of the table")
+
+--You can then refer to this value as:
+print(myTable[1]) -- Prints out "This is item 1 of the table"
+
+--You can replace 1 with any number you like, and it will still work. 
+--Note that myTable:insert() will shift the positions of the other 
+--values in a table, whereas referencing the table directly 
+--(myTable[1] = "...") will overwrite the value at position 1.
+
+--Part III - Strings as keys 
+
+--If you are creating an array with no specific order 
+--(e.g. a username and password table) you can also use strings as a key:
+myTable["ZudoHackz"] = "MyPassword"
+myTable["SomeoneElse"] = "SomePassword"
+
+--You can't use myTable:insert() with strings (I think). 
+--To reference a value, you can just do:
+print(myTable["ZudoHackz"])
+-- Or
+print(myTable.ZudoHackz)
+
+--Part IV - Initializing a table with data already in it 
+local myTable = {}
+myTable[1] = "blah1"
+myTable[2] = "blah2"
+myTable[3] = "blah3"
+--...
+
+--This works, but it is quicker and shorter to do this:
+local myTable = {"blah1","blah2","blah3"}
+
+--If you create a table like this, 
+--myTable[1] would be set to "blah1", myTable[2] would be "blah2" etc.
+
+--You can also do this:
+myTable = {[1] = "blah1", [2] = "blah2", [3] = "blah3"}
+
+--If you do it this way, you can change the order easily:
+local myTable = {[3] = "blah1", [2] = "blah2", [1] = "blah3"}
+
+--Or even do this:
+local myTable = {[1] = "blah1", [6] = "blah2", [300] = "blah3"}
+
+--This also works with anything else as a key:
+local myTable = {["one"] = "blah1", ["two"] = "blah2", ["three"] = "blah3"}
+
+--Part V - Using tables 
+
+--Tables are used for storing similar information. 
+--But, they can also be used for other things, like:
+
+--Capturing return values 
+
+--Some functions, like os.pullEvent() return different amounts of return values. 
+--You could do something like this:
+local a, b, c, d, e = os.pullEvent()
+print(a)
+print(B)/>/>/>
+print(c)
+print(d)
+print(e)
+
+--but you still can't be sure you have saved all the return values. 
+--However, a setup like this:
+local myEventData = {os.pullEvent()}
+for _, value in pairs(myEventData) do
+print(v)
+end
+
+--would definitely capture all of the values, and definitely return them all. 
+--More on the for loop later. Anyway, if you put the function call in curly { } brackets,
+--it will return a table. myEventData[2] in the second example is equal to b in the first example.
+
+--Please read 
+
+--IP.Board screwed up the third line of the first example in this section. It is print b but with brackets, rather than spaces.
+
+--This isn't really a use of the table, but it is very useful to learn about
+--Iterating through a table 
+
+--With the pairs() function, you can iterate through a table. Here is an example:
+local myTable = {"blah1","blah2","blah3"}
+for key, value in pairs(myTable) do
+print("The value of the key " .. key .. " is ".. value)
+end
+
+--This piece of code repeats 3 times (there are three values in the table) and prints:
+--The value of the key 1 is blah1
+--The value of the key 2 is blah2
+--The value of the key 3 is blah3
+
+--So this can be very useful. How about this?
+local myTable = {"blah1","blah2","blah3"}
+local function isInTable(table, value)
+for _, v in pairs(table) do -- Use _ if you don't need that return value.
+  if v == value then
+   return true, k
+  end
+end
+return false
+end
+
+isInTable(myTable, "blah1") -- Returns [true, 1]
+isInTable(myTable, "blah2") -- Returns [true, 2]
+
+isInTable(myTable, "blah3") -- Returns [true, 3]
+isInTable(myTable, "blah4") -- Returns false
+
+--So iterating through tables is very, very useful.
+
+--************************************************************************************************
+
+-- s://www.youtube.com/watch?v=1YMplg5ihYI&list=PLaiPn4ewcbkHYflo2jl0OuNaHK6Mj-koG&index=7&t=15s
+-- Tables are arrays in LUA!
+
+local colors = {"blue", "red", "green" }
+
+print(colors[1]) -- first index is 1!
+
+for i = 1, 4 do
+  print(colors[i])
+end
+
+-- Reference keywords with indexes => enums
+local side = {north=2,south=3,east=5,west=4,top=1,bottom=0}
+local chest = side.west
+
+local colorCodes = {white = 1, orange = 42, magenta = 3 }
+print(colorCodes["orange"])
+for key,value in pairs(colorCodes) do
+  print(key.."="..value)
+end
+
+local stuff = {"blue", {"stuff1", "stuff2"}, "green"}
+print(stuff[1])
+print(stuff[2][1])
+print(stuff[2][2])
+print(stuff[3])
+
+-- Get the length of a table
+someTable = { "bla", "blo" }
+local len = table.getn(someTable)
+
+
+
+--==COMMAND LINE ARGUMENTS==
+-- Command line arguments are arrays/tables!
+-- s://www.youtube.com/watch?v=1YMplg5ihYI&list=PLaiPn4ewcbkHYflo2jl0OuNaHK6Mj-koG&index=7&t=15s
+
+-- Pass arguments when running a program!
+local tArgs = {...}
+local numMove = tArgs[1]
+local extra = tArgs[2]
+print("First: "..numMove.." Second: "..extra)
+-- make sure to pass an integer and word when running the program!
+-- ex: CommandLineArguments 3 test
+-- Use this to do stuff like turtle.rotate 8
+
+
+--==Peripherals==
+-- https://computercraft.info/wiki/Peripheral_(API)
+
+print("Peripherals Info")
+
+local periph = {...}
+local sides = {"top", "bottom", "front", "back", "left", "right" }
+
+--doesnt work for some reason… CAME IN ComputerCraft 1.51!!!
+--local names = peripheral.getNames()
+--namesLen = table.getn(names)
+--print("NamesLen: "..namesLen)
+--for i=1, namesLen do
+--  print("- "..names[i])
+--end
+--
+
+tableLen = table.getn(sides)
+for i = 1, tableLen do
+  if (peripheral.isPresent(sides[i])) then
+    print("")
+    print("Side: "..sides[i])
+    print("Type: "..peripheral.getType(sides[i]))
+   
+    m = peripheral.getMethods(sides[i])
+    methodsLen = table.getn(m)
+    print("Methods: "..methodsLen)
+    for n=1, methodsLen do
+      print("- "..m[n])
+    end   
+  end
+end
+
+-- CALL METHODS
+-- peripheral.call(string side, string method)  
+
+-- WRAP (add a monitor on top!)
+local monitor = peripheral.wrap("top")
+mLen = table.getn(monitor)
+print("Wrapped peripheral top len: "..mLen)
+for i=0, mLen do
+  print(m[i]) -- monitor is NOT methods array! 
+end
+-- BUT as a wrapped peripheral provides all functs
+-- listed in the Term API
+monitor.write("Hello World!")
+
+--Some peripherals have simplified access methods like Disk Drive and rednetAPI => rednet.open(<side>)
+print("")
+
+local side = ""  
+term.write("Enter side (top/bottom/front/back/left/right): ")  
+side = read()
+print("Peripheral Info Side: "..side)
+print("Type: "..peripheral.getType(side))
+print("Methods:")
+methods = peripheral.getMethods(side)
+len = table.getn(methods)
+
+for i=1, len do
+  print("- "..methods[i])
+end
+ 
+
+--==TURTLES==
+
+--Sign Placing Turtle
+turtle.place("Sign Text") 
+
+Use line breaks ("\n")
+turtle.place("Line 1\nLine 2\nLine 3\nLine4")
+
+Sign reading (Reading turtle, no recipe):
+- http://www.computercraft.info/forums2/index.php?/topic/6728-147miscperipherals-sign-commands-beta-v10/
+- https://pastebin.com/fkrv7r4V
+
+
+--==Os.loadAPI==
+source: https://computercraft.info/wiki/Os.loadAPI
+  Function os.loadAPI
+Loads a user created API from a file located at path.
+This function runs the file, collects all global (non-localized) variables from it and puts them into a table into the global (_G) environment. The name of the table in the _G table becomes the name of the file.
+Syntax
+os.loadAPI(string path)
+Returns
+Boolean did the API load successfully?
+Part of
+ComputerCraft
+API
+OS
+Examples
+  Example
+Loads an API saved at "test/myAPI" and runs the global function "hello" from it.
+Code
+--test/myAPI:
+
+local text = "Hello World!" -- this won't be seen from outside of the API because it is localized
+
+function hello () -- this will be seen from outside the API because it is not localized
+  print(text)
+end
+--The program that will use "myAPI"
+
+os.loadAPI("test/myAPI") -- load the API
+
+myAPI.hello() -- runs the function "hello" from the API
+Output
+Hello World!
+Additional Notes
+      - Path must be an absolute path.
+      - All variables which will be needed to be accessed through <apiname>.<variable/function> must be global.
+      - By default APIs cannot access shell API and multishell API.
+
+
+--==EVENTS==
+--https://computercraft.info/wiki/Os.pullEvent#Event_types
+--https://www.youtube.com/watch?v=-acYafWcdoc&list=PL9XabkF_A5YjFHJpJV5f5ta6cx81Ku_4k&index=7
+
+term.clear()
+term.setCursorPos(1,1)
+
+print("Press any key or mouse (mouse=AdvComputer only!)")
+
+event, param1 = os.pullEvent() -- pull event returns 2 variables!
+
+print("Event: "..event.." Param1: "..param1.." <-- every key has a different number")
+
+-- Different events will generate a different number of events. 
+-- (up to 5, mostly 4)
+
+print("Terminate loop with: q")
+count = 0
+while param1 ~= "q" do
+    event, param1, param2, param3, param4 = os.pullEvent()
+    print(count.." Event: "..tostring(event).." p1: "..tostring(param1).." p2: "..tostring(param2).." p3: "..tostring(param3).." p4: "..tostring(param4))
+    count = count + 1
+end
+
+-- Peripherals can generate events for a computer!
+
+--EXAMPLE [chat events and chatbox]
+-- Add a chatbox to bottom of your computer for next example.
+
+print("Write something in chat!")
+chatBox = peripheral.wrap("bottom")
+event, p1, p2 = os.pullEvent("chat")
+print(" cBox: "..tostring(chatBox))
+if chatBox then
+    chatBox.say("Hi, your Events program used the chatbox to respond here!")
+end
+print("Received chat event: "..tostring(event).." p1: "..tostring(p1).." p2: "..tostring(p2))
+
+
+TODO => https://www.youtube.com/watch?v=VBX0dmtIbd4&list=PL9XabkF_A5YjFHJpJV5f5ta6cx81Ku_4k&index=12
+https://www.youtube.com/watch?v=kTzkTcCTVZg&list=PL9XabkF_A5YjFHJpJV5f5ta6cx81Ku_4k&index=14
+
+http://www.computercraft.info/forums2/index.php?/topic/3923-basic-file-io-learn-how-to-save-data/
+https://www.youtube.com/watch?v=0cEeQek7Ly4
+
+--==FS_API==
+--https://computercraft.info/wiki/Fs_(API)
+
+-- DIRECTORIES
+path = "TestFolder_123/"
+exists = fs.exists(path)
+if not exists then
+    fs.makeDir(path)
+end
+print("Check for new directory: "..path.." exists: "..tostring(exists))
+
+-- CREATE FILES
+filePath = path.."newFile"
+local file = fs.open(filePath, "w")
+file.writeLine("This is a line")
+file.close() -- never forget to close a file!
+
+-- READ FILES
+h = fs.open(filePath, "r")
+print("h: "..tostring(h))
+text = h.readAll()
+h.close() -- never forget to close a file!
+print(text)
+
+print("Check for text file in: "..filePath..".")
+
+-- DELETE DIRECTORIES/FILES
+answerAccepted = false
+while not answerAccepted do
+    write("Remove "..path.."? (y/n)")
+    remove = tostring(read())
+    if remove == "y" then
+        fs.delete(path)
+        print("Directory "..path.." has been removed")
+        answerAccepted = true
+    elseif remove == "n" then
+        answerAccepted = true
+    end
+end

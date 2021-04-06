@@ -1,0 +1,53 @@
+--==REDNET RECEIVE==
+--https://www.youtube.com/watch?v=TphOMZ_CSb4&list=PL9XabkF_A5YjFHJpJV5f5ta6cx81Ku_4k&index=9
+
+rednet.open("back")
+
+--*******************************************************************************************
+-- USING rednet.receive()
+
+-- Waits until someone sends a message to this computer, then displays it.
+local senderId, message, protocol = rednet.receive()
+print(tostring(message))
+
+-- Waits five seconds or until someone sends a message to this computer, then displays it.
+senderId, message, protocol = rednet.receive(5)
+print(tostring(message))
+
+--[[
+-- Waits until someone sends a message to this computer with a protocol of "futons", then displays it.
+senderId, message, protocol = rednet.receive("futons")
+print(tostring(message))
+
+-- Waits five seconds or until someone sends a message to this computer with a protocol of "futons", then displays it.
+senderId, message, protocol = rednet.receive("futons",5)
+print(tostring(message))
+--]]
+
+--*******************************************************************************************
+-- Listen to Rednet Events over os.pullEvent()
+
+-- 5 params:
+-- a = event (rednet_message)
+-- b = side of the modem
+-- c = ... distance of message travelled?
+-- d = sender ID
+-- e = message
+
+-- Is there a 6th??
+-- f = ... distance of message travelled?
+
+print("")
+print("Listen to Rednet Events over os.pullEvent()")
+
+count = 0
+while true do
+    a, b, c, d, e = os.pullEvent()
+    print("")
+    print(count.." ID: "..tostring(d).." Message: "..tostring(e))
+    if tonumber(d) == 140 then
+        worked = rednet.send(tonumber(d), "Stop broadcasting!!!")
+        print("Message sent: "..tostring(worked))
+    end
+    count = count + 1
+end

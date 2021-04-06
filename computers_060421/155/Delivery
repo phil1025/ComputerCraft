@@ -1,0 +1,71 @@
+function moveLeft() 
+    turtle.turnLeft()
+    if not turtle.detect() then
+        turtle.forward()
+    end
+    turtle.turnRight()
+end
+
+function moveRight()
+    turtle.turnRight()
+    if not turtle.detect() then
+        turtle.forward()
+    end
+    turtle.turnLeft()
+end
+
+local tArgs = {...}
+local fuelLevel = turtle.getFuelLevel()
+
+local fwdDistance = tonumber(tArgs[1])
+if fwdDistance == nil then
+    fwdDistance = 0
+end
+local traveledDist = 0
+
+if fuelLevel == 0 then
+ turtle.refuel(1)
+end
+
+print("fwdDistance: "..fwdDistance)
+print("fuelLevel: "..fuelLevel)
+
+local arrived = false
+local solutionFound = true
+
+local lastFwdDist = 0
+
+while not arrived do
+    --print("travelling!")
+    
+    if traveledDist >= fwdDistance then
+        arrived = true
+    elseif not turtle.detectDown() and solutionFound then
+        turtle.down()
+    elseif not turtle.detect() then 
+        turtle.forward()
+        traveledDist = traveledDist + 1
+        solutionFound = true
+    elseif not turtle.detectUp() then
+        turtle.up()
+        if not turtle.detect() then
+            turtle.forward()
+            traveledDist = traveledDist + 1
+            solutionFound = true
+        else
+            solutionFound = false
+        end
+    else 
+        ----Rotate left/right and find path around
+        if not(fwdDistance == lastFwdDist) then
+            moveRight()
+        else
+            moveLeft()
+        end
+    end
+    
+    lastFwdDist = fwdDist
+end
+
+print("")
+print("Turtle arrived! Traveled distance: "..traveledDist)

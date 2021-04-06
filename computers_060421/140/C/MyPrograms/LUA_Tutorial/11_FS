@@ -1,0 +1,80 @@
+term.clear()
+term.setCursorPos(1,1)
+
+local monitor = peripheral.wrap("left")
+if monitor then
+    monitor.setTextScale(0.5)
+end
+
+--**********************************************************************
+
+--==FS_API==
+--https://computercraft.info/wiki/Fs_(API)
+--http://computercraft.info/wiki/Fs.open
+
+-- DIRECTORIES
+local path = "TestFolder_123/"
+local exists = fs.exists(path)
+if not exists then
+    fs.makeDir(path)
+end
+print("Check for new directory: "..path.." exists: "..tostring(exists))
+
+-- CREATE FILES
+local filePath = path.."newFile"
+local file = fs.open(filePath, "w")
+file.writeLine("This is line 1")
+file.writeLine("This is line 2")
+file.writeLine("This is the end")
+file.close() -- NEVER FORGET TO CLOSE A FILE!
+
+print("")
+
+-- READ FILES
+local h = fs.open(filePath, "r")
+print("h: "..tostring(h))
+
+-- [readLine()] returns string the next line read from the 
+-- file, with the end-of-line character stripped; or nil 
+-- if there are no more lines in the file
+print("readLine()")
+local line = h.readLine()
+print("Line: "..line)
+
+-- Iterate with readline!
+-- http://www.computercraft.info/forums2/index.php?/topic/25583-fsreadline/
+local file_lines = {} --#create a blank table
+--# file.readLine is a function which acts similar to pairs or ipairs,
+--  and therefor can be used like this:
+for line in h.readLine do 
+  --#set file_lines[ the number of items in file_lines + 1 ] equal to the current line
+  file_lines[#file_lines + 1] = line 
+end
+print("- fileLine[0]: "..file_lines[1]) --#prints the first line of the file
+print("")
+
+-- [readAll()] returns string the entire rest of the file, 
+-- with the end-of-line character on the very 
+-- last line (if present) stripped.
+print("readAll()")
+h = fs.open(filePath, "r") -- reopen file (lines have already been iterated)
+local text = h.readAll()
+print("Text: "..text)
+
+h.close() -- NEVER FORGET TO CLOSE A FILE!
+
+print("Check for text file in: "..filePath..".")
+
+-- DELETE DIRECTORIES/FILES
+local answerAccepted = false
+while not answerAccepted do
+    write("Remove "..path.."? (y/n)")
+    local remove = tostring(read())
+    if remove == "y" then
+        fs.delete(path)
+        print("Directory "..path.." has been removed")
+        answerAccepted = true
+    elseif remove == "n" then
+        answerAccepted = true
+    end
+end

@@ -1,0 +1,66 @@
+--updates needed on server:
+x_Turtles (new Tutorial)
+LUA_Documentation
+
+--update needed on local:
+from PC 140 to 157(turtle):
+apiManager implementation (all)
+
+------------------------------------------------
+SWITCH WHOLE SYSTEM TO WORK WITH FILE ENDINGS => find loadable api files simply by searching for ".api" ending
+												 !! So paths can change !!
+												 Maybe even place an api identifier inside => api_id = "fileSys"
+																						   => api_id = "itemTable_API"
+												 So the file name can change later. 
+												 apiManager_API will identidy .api files via api_id, so the api_id must never change.
+												 So basically hides bad naming behind the curtain
+------------------------------------------------
+more DB Attributes:
+- optimal mining y range => explorer/advMining turtle can go to right altitude for 
+- item recipe (if exists)
+- depending recipes
+- thresholds
+- statistics | avg consumption/time, fillRate/time, etc...) => time (year, month, week, day, hour, minute) => draw graph curves with clickable datapoints!
+------------------------------------------------
+-- IDEAS
+- API Manager => an API that provides easy access to
+	         other APIs without need of dirPath
+			 
+- Broadcast Repeater Program => routing protocol sender->receiver
+
+- GPS Triangulation for Turtles
+
+- Map drawer Program => minecraft map to screen? 
+
+- Setups
+-- CREATE InteractiveSorter_Software that allows easier handling => UI´s
+-- Make installable setups 
+--> SETUP storageExpander: central pc, turtle
+--  1. turtle/s to manage storage
+--  2. turtle/s to expand storage on demand (dig, place, craft?, setup interactive sorters?)
+--  3. central pc commands turtles (equips turtles, starts program (store/observe/expand))
+--  4. central pc keeps track of last chest position in order to tell turtle where to go
+--  5. central pc stores data to disk
+--> SETUP storageInput gate
+--  1. no clear concept yet...
+-- maybe classify item ids => archive=>storageExpander, deliver=>direct users/demands, process=>recipes/autocrafting, discard=>itemDestroyer  
+--> SETUP automatic quarry?!!
+--  1. turtles rebuild everything at next location, make setup, deliver stuff to base!
+
+- REPO => sort of a code synchronisation system for local and inGame/server
+
+- Turtle Inventory Registration DB
+---> a program to be run as api 
+---> allows to register uuid´s for slots, in order to let turtle programs make decisions based on item type => diamond>go to diamond mining level
+---> slot purpose [resource, loot, fuel, torches, intersctiveSorter(carrying)]
+---> demands that each registered slot contains 1 example item for comparing blocks if no interactiveSorter solution is used
+
+- Explorer Turtle => auto explore and return
+- Quarry Turtle
+- Basically turtles working together to setup quarries, oil pumps, resource chains to home, etc..
+
+Turtle program ConstructTunnel aka turtleAPI features:
+- place torches, torches reserved slot
+- preload stacks in default slots for 13-16 slot materials 
+	if a 13-16 stack becomes low turtle checks other slots with compareTo
+	if matching stack found transfers it to the involved 13-16 stack

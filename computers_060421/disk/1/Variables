@@ -1,0 +1,35 @@
+-- s://www.youtube.com/watch?v=ieeOS-p2PD0
+
+local x
+x = 5
+
+print((x+1) + 1)
+
+local y = 20
+
+-- basic math
+print(x / y)
+print(y / x)
+print(x * 5)
+print(y^2)
+
+-- bools
+local bool = true
+print(bool)
+print(not bool) -- "!" NOT
+
+-- merge strings
+local h = "Hello"
+local w = "World"
+print("h: "..h)
+print("w: "..w)
+print("h+w: "..h.." "..w)
+
+-- User input / scanner
+local info
+term.write("Please enter a value: ")
+info = read()
+print("You entered "..info)
+
+-- pastebin put "program name" -> uploads to pastebin
+-- ... needs change in computercraft config (http)

@@ -1,0 +1,9 @@
+term.clear() -- clears terminal
+term.setCursorPos(1, 1) -- sets cursor pos to line pos xy
+
+term.write("BLA") -- writes line without new line
+
+print("HelloWorld") -- writes line and sets cursor to next line
+print("WelloHorld")
+
+print("Hi there")

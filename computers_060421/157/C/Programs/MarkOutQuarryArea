@@ -1,0 +1,20 @@
+--> Look at: https://pastebin.com/e0UksEtT
+
+-- ********** Changelog 05.04.21 **********
+
+-- ****************************************
+
+term.clear()
+term.setCursorPos(1,1)
+
+print("  ***********************************")
+print("  ****** MarkOutQuarryArea 1.0 ******")
+print("  ***********************************")
+print("")
+
+local turtleLib = apiManager.load("turtleLib")
+print("turtleLib: "..tostring(turtleLib))
+
+term.write(" Enter forward distance: ")
+
+local fwdDist = tonumber(read())
