@@ -7,7 +7,8 @@
 
 local label = os.getComputerLabel()
 if label == nil then
-	print("No computer label set. Autosetting label to prevent loss of data!")
+	print("No computer label set.")
+	print("Autosetting label to prevent loss of data!")
 	shell.run("label set Computer_"..tostring(os.getComputerID()))
 end
 
@@ -15,18 +16,15 @@ end
 
 local continue = false
 
--- 1. Check if C/ exists
---[[
-if not fs.exists("C") then
-	fs.makeDir("C")
-end
---]]
-
+-- 1. Check if C/extOS exists
 local dir = "C/extOS/"
-
 if not fs.exists(dir) then
 	print("Creating dir: "..dir.."...")
 	fs.makeDir(dir)
+else
+	print("A directory \""..dir.."\" already exists!")
+	print("Overwrite existing installation? (y/n)")
+	local overwrite = read()
 end
 
 

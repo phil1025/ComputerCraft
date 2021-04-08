@@ -5,6 +5,13 @@
 
 -- 1. check if extOS is present, check version => ask on overwrite
 
+print("Start installation extOS? (y/n)")
+
+local install = tostring(read())
+if not install == "y" then
+	return
+end
+
 term.clear()
 term.setCursorPos(1, 1)
 
