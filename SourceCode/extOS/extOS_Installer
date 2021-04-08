@@ -13,6 +13,8 @@ print("		           ***** extOS Installer *****")
 print("		           ***************************")
 print("")
 
+sleep(1)
+
 local mainPath = "https://raw.githubusercontent.com/phil1025/ComputerCraft/main/"
 local webInstallerPath = "SourceCode/extOS/extOS_WebInstaller"
 local download = http.get(mainPath..webInstallerPath)
@@ -24,9 +26,11 @@ if download then
 	
 	local filePath = "temp_extOS_WebInstaller"
 	local file = fs.open(filePath,"w")
-	file.write(handle)
+	file.write(installData)
 	file.close()
-	print("Downloaded "..webInstallerPath.." to "..filePath)
+	print("Downloaded webInstaller to "..filePath)
+	print("Preparing installation...")
+	sleep(2)
 	shell.run(filePath)
 else 
 	print("Unable to download the file "..webInstallerPath)

@@ -8,6 +8,8 @@
 local label = os.getComputerLabel()
 print("label: "..label)
 
+read()
+
 local continue = false
 
 -- 1. Check if C/ exists
