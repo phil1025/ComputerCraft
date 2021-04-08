@@ -25,6 +25,11 @@ if download then
 	download.close()
 	
 	local filePath = "temp_extOS_WebInstaller"
+	
+	if fs.exists(filePath) then
+		fs.delete(filePath)
+	end
+	
 	local file = fs.open(filePath,"w")
 	file.write(installData)
 	file.close()
