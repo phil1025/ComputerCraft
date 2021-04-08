@@ -1,0 +1,134 @@
+local function putBlock()
+    local success = false
+    for i = 13, 16 do
+        local itemCount = turtle.getItemCount(i)
+        --print("slot "..i..": "..tostring(itemCount))
+        if turtle.getItemCount(i) > 0 then
+            print(" => using slot "..i.." stackCount: "..tostring(itemCount))
+            if turtle.detectDown() then
+                turtle.digDown()
+            end
+            turtle.select(i)
+            success = turtle.placeDown()
+            turtle.select(1)
+            break
+        end
+    end
+    if not success then
+        print("Could not place block! No building material?")
+    end
+    return success
+end
+
+local function moveForward()
+    while turtle.detect() do
+        turtle.dig()
+    end
+        turtle.forward()
+end
+
+local function build(width, distance)
+    local success = false
+    local dist = 0
+    local turnDir = "l"
+    
+    moveForward()
+    turtle.turnRight()
+
+    while dist < distance do 
+        
+        for i = 1, (width - 1) do
+            success = putBlock()
+            if not success then
+                return false
+            end
+            moveForward()
+        end
+        
+        success = putBlock()
+        if not success then
+            return false
+        end
+        
+        dist = dist + 1
+        print("Covered distance: "..tostring(dist))
+        
+        if turnDir == "r" then
+            turnDir = "l"
+            turtle.turnRight()
+            
+            if dist == distance then
+                break
+            end
+            
+            moveForward()
+            turtle.turnRight()
+        elseif turnDir == "l" then
+            turnDir = "r"
+            turtle.turnLeft()
+            
+            if dist == distance then
+                break
+            end
+            
+            moveForward()
+            turtle.turnLeft()
+        end
+    end
+    return true
+end
+
+local function main(width, distance)
+    -- check for fuel
+    if turtle.getFuelLevel() <= 50 then
+        for i = 1, 16 do
+            turtle.select(i)
+            turtle.refuel(1)
+            if turtle.getFuelLevel() > 0 then
+                break
+            end
+        end
+        if turtle.getFuelLevel() == 0 then
+            print("No Fuel!")
+        end
+    end
+    
+    local hasMaterial = false
+    for i = 13, 16 do
+        local itemCount = turtle.getItemCount(i)
+        if itemCount > 0 then
+            hasMaterial = true
+            break
+        end
+    end
+    
+    if hasMaterial then
+        build(width, distance)
+    else
+        print("No building material!")
+    end
+end
+
+-- **********************************************************
+
+term.clear()
+term.setCursorPos(1,1)
+
+print("  **********************************")
+print("  ******* Bridge Builder 1.0 *******")
+print("  **********************************")
+
+print("")
+
+print("  - slots  1-12: fuel/other")
+print("  - slots 13-14: building material")
+print("")
+
+print("Enter width: ")
+local width = tonumber(read())
+
+print("Enter distance: ")
+local distance = tonumber(read())
+
+main(width, distance)
+print("Program end")

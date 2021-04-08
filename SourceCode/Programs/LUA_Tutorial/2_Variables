@@ -1,0 +1,45 @@
+-- s://www.youtube.com/watch?v=ieeOS-p2PD0
+
+local x
+x = 5
+
+print((x+1) + 1)
+
+local y = 20
+
+-- basic math
+print(x / y)
+print(y / x)
+print(x * 5)
+print(y^2)
+
+-- bools
+local bool = true
+print(bool)
+print(not bool) -- "!" NOT
+
+-- merge strings
+local h = "Hello"
+local w = "World"
+print("h: "..h)
+print("w: "..w)
+print("h+w: "..h.." "..w)
+
+-- User input / scanner
+local info
+term.write("Please enter a value: ")
+info = read()
+print("You entered "..info)
+
+-- Global Variable _G
+-- --> http://www.computercraft.info/forums2/index.php?/topic/15445-using-g-how-to-use-varibles/
+-- The environment shared by pretty much all functions is name _G (global environment).
+-- This global environment is just – a table which is within the scope of any function that hasn't had its environment  specified otherwise.
+-- For example, the terminal API and other APIs, are loaded into the _G table as tables which contain API related  functions or data. 
+-- When you want to store things in the _G table, you can simply do the following:
+-- _G["index"] = ...
+-- or even (if you know exactly what you want the index to be)
+-- _G.totallyAwesomeTable = {}
+
+-- pastebin put "program name" -> uploads to pastebin
+-- ... needs change in computercraft config (http)

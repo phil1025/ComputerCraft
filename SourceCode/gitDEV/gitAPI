@@ -1,0 +1,85 @@
+--[[
+GIT json data structure
+-------------------------------------------------
+"sha": "cd8274d15fa3ae2ab983129fb037999f264ba9a7",
+  "url": "https://api.github.com/repos/octocat/Hello-World/trees/cd8274d15fa3ae2ab983129fb037999f264ba9a7",
+  "tree": [
+    {
+      "path": "file.rb",
+      "mode": "100644",
+      "type": "blob",
+      "size": 132,
+      "sha": "7c258a9869f33c1e1e1f74fbb32f07c86cb5a75b",
+      "url": "https://api.github.com/repos/octocat/Hello-World/git/blobs/7c258a9869f33c1e1e1f74fbb32f07c86cb5a75b"
+    },
+    ...
+-------------------------------------------------
+--]]
+
+-- ************************ Internal functions ************************
+--[[
+--  STRING SPLIT (port from stringUtilsAPI)
+--  Compatibility: Lua-5.1
+--  Example: Split a file path string into components.
+--      function split_path(str)
+--          return split(str,'[\\/]+')
+--      end
+--  parts = split_path("/usr/local/bin")
+--  --> {'usr','local','bin'}
+local function split(str, pat)
+   --local t = {}  -- NOTE: use {n = 0} in Lua-5.0
+   local t = {n = 0}
+   local fpat = "(.-)" .. pat
+   local last_end = 1
+   local s, e, cap = str:find(fpat, 1)
+   while s do
+      if s ~= 1 or cap ~= "" then
+         table.insert(t, cap)
+      end
+      last_end = e+1
+      s, e, cap = str:find(fpat, last_end)
+   end
+   if last_end <= #str then
+      cap = str:sub(last_end)
+      table.insert(t, cap)
+   end
+   return t
+end
+--]]
+
+-- ************************ External functions ************************
+
+-- DOWNLOAD FILE
+-- For fetched repo tree items simply use "item.path"
+function get(itemPath, saveTo)
+    local mainPath = "https://raw.githubusercontent.com/phil1025/ComputerCraft/main/"
+    local download = http.get(mainPath..itemPath)
+    if download then
+        local handle = download.readAll()
+        download.close()
+        local file = fs.open(saveTo,"w")
+        file.write(handle)
+        file.close()
+        print("Downloaded "..itemPath.." to "..saveTo)
+    else 
+        print("Unable to download the file "..itemPath)
+        print("Make sure you have the HTTP API enabled or")
+        print("an internet connection!")
+    end
+end
+
+-- FETCH GIT Repo 
+function fetch()
+    --> http://www.computercraft.info/forums2/index.php?/topic/28985-download-folder-from-github/
+    --> Look up structure: https://docs.github.com/en/rest/reference/git#trees
+    --> Git Repo: https://github.com/phil1025/ComputerCraft
+    
+    local gitURL = "https://api.github.com/repos/phil1025/ComputerCraft/git/trees/main?recursive=1"
+    local request = http.get(gitURL)
+    local data = request.readAll()
+    request.close()
+    
+    os.loadAPI("gitDEV/json_lua-master/json_lua") --> IMPLEMENT apiManager
+    local decoded = json_lua.unwrap(data)
+    return decoded
+end

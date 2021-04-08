@@ -1,0 +1,113 @@
+
+-- THIS BECOMES A ItemAPI!!!
+-- getRawLines
+-- getItemsTable
+-- getCount
+-- getItem(id, meta)
+-- getItem(name, meta)
+-- getItem(uuid)
+
+local itemsTable
+local itemDump_Dir = "C/MyPrograms/APIs/itemTable/FTB_Lite1_ItemDump"
+
+--[[
+function getRawLines()
+	local lines = {}
+	local h = fs.open(itemDump_Dir, "r")
+	for line in h.readLine do 
+		lines[#lines + 1] = line 
+	end
+	h.close()
+	return lines
+end
+--]]
+
+function getItemsDump()
+	
+	--[[
+	os.loadAPI("C/MyPrograms/APIs/stringUtilsAPI") 
+	os.loadAPI("C/MyPrograms/APIs/interactiveSorterAPI")
+	os.loadAPI("C/MyPrograms/APIs/fileSys")
+	--]]
+	
+	local stringUtils = apiManager.load("stringUtils")
+	local sorterAPI = apiManager.load("interactiveSorterAPI")
+	local fileSys = apiManager.load("fileSys")
+	
+	print(" fileSys: "..tostring(fileSys))
+	
+	local items = {}
+	--local lines = getRawLines()
+	local lines = fileSys.readAllLines(itemDump_Dir)
+	
+	for i = 1, #lines do
+		local item = {}
+    
+		local elements = stringUtils.split(lines[i], " = ")
+		local elementsLen = table.getn(elements)
+    
+		local info_0 = stringUtils.split(elements[1], ":")
+		item["id"] = tonumber(info_0[1])
+		item["meta"] = tonumber(info_0[2])
+	
+		--[[ 
+		--> separator "(" doesnt work => PROBLEM: <name> (#698880) <more accurate info>
+		local name = stringUtils.split(elements[3], "%(")[1] -- holds a more accurate name for some items!
+		if string.len(name) <= 1 then
+			name = elements[2]
+		else
+			name = string.gsub(name, "% ", "")
+		end
+		item["name"] = name
+		--tag = stringUtils.removeVowels(name)
+		--]]
+	
+		item["name"] = elements[2]
+		item["uuid"] = sorterAPI.getUUID(item.id, item.meta)
+		--print(i.." id: "..item.id.." meta: "..item.meta.." name: "..item.name) --tag: "..tag)
+		items[i] = item
+	end
+	return items
+end
+
+function getItemFromID(id, meta)
+	local item = nil
+	if itemsTable == nil then
+		itemsTable = getItemsDump()
+	end
+	for i = 1, #itemsTable do
+		if itemsTable[i].id == id and itemsTable[i].meta == meta then
+			item = itemsTable[i]
+			break
+		end
+	end
+	return item
+end
+
+function getItemFromUUID(uuid)
+	local item = nil
+	if itemsTable == nil then
+		itemsTable = getItemsDump()
+	end
+	for i = 1, #itemsTable do
+		if itemsTable[i].uuid == uuid then
+			item = itemsTable[i]
+			break
+		end
+	end
+	return item
+end
+
+function getItemFromName(name, meta)
+	local item = nil
+	if itemsTable == nil then
+		itemsTable = getItemsDump()
+	end
+	for i = 1, #itemsTable do
+		if itemsTable[i].name == name and itemsTable[i].meta == meta then
+			item = itemsTable[i]
+			break
+		end
+	end
+	return item
+end

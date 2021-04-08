@@ -1,0 +1,105 @@
+-- DEPRECATED, go to => Tests/InteractiveSorterAPI_Test
+
+local monitor = nil
+if (peripheral.getType("right") == "monitor") then
+    monitor = peripheral.wrap("right")
+elseif (peripheral.getType("left") == "monitor") then
+    monitor = peripheral.wrap("left")
+end
+
+term.clear()
+term.setCursorPos(1,1)
+
+if monitor then
+    monitor.setTextScale(0.5)
+end
+
+print("Monitor: "..tostring(monitor))
+
+--****************************************************************************************
+
+print("")
+print("running IS_ListTest")
+
+--.loadAPI("/InteractiveSorter_SourceCode/sorterAPI") --> move to startup file
+--os.loadAPI("/InteractiveSorter_SourceCode/sorterAPI_30")
+
+os.loadAPI("C/MyPrograms/InteractiveSorter/sorterAPI") --> move to startup file
+os.loadAPI("C/MyPrograms/APIs/itemTable/itemTableAPI") 
+
+-- FOR NOW RUN IT ON MONITOR WITH COMMAND: "monitor left IS_ListTest"
+-- Create API for itemDump => itemDB => getItemRefs(id) => table with info (Cobblestone, CBL,...)
+-- Learn more about arrays/tables...
+-- Consider this: local x, y = term.getCursorPos() => Try reading stack like this!
+
+sorter = peripheral.wrap("top")
+print("sorter: "..tostring(sorter))
+ 
+ print("Integer |	Direction")
+ print("0	      | Down")
+ print("1	      | Up")
+ print("2	      | North (-Z)")
+ print("3	      | South (+Z)")
+ print("4	      | West (-X)")
+ print("5	      | East (+X)")
+ term.write("Enter chest index: ")
+ chestIndex = tonumber(read())
+
+chest = sorter.list(chestIndex)
+chestLen = table.getn(chest)
+
+print("chest: "..tostring(chest).." len: "..tostring(chestLen))
+
+ --******************************Stacks_01**********************************
+ --RETURNS WRONG UUIDS! NO GOOD USE => STACKS03 WORKS
+ --[[
+ local stacks = {}
+ for uuid,count in pairs(chest) do
+    id = sorterAPI.getID(uuid)
+    outA = "-UUID: "..uuid.." ID: "..id
+    print(outA)
+    
+    --item = itemTableAPI.getItemFromID(stack.id, stack.meta)
+    --print(" item: "..tostring(item))
+    
+    stack = sorterAPI.getStack(uuid)
+    stack.amount = count
+    
+    outB = " =>stID: "..tostring(stack.id).." amt: "..tostring(stack.amount).." mta: "..tostring(stack.meta)
+    print(outB)
+
+    table.insert(stacks, id)
+ end
+ --]]
+ 
+ --******************************Stacks_02**********************************
+ --[[
+ stacks2 = sorterAPI.getStacks("right","left")
+ for item,count in pairs(stacks2) do
+    print(" stk2 item: "..tostring(item).." amt: "..count)
+ end
+ 
+ print(tostring(stacks2[1]))
+ --print("stacks2: "..tostring(stacks2).." len: "..table.getn(stacks2))
+ --]]
+ 
+ --******************************Stacks_03**********************************
+ -- outs amounts aswell! way to go..
+ --http://www.computercraft.info/forums2/index.php?/topic/8397-apimiscperipherals-interactive-sorter-idmeta-reader-api/
+
+print("Stacks3")
+local stacks3 = {}
+for item,count in pairs(chest) do
+  itemId = bit.band(item, 0x7fff)
+  damageValue = bit.brshift(item, 15)
+  local stack = {}
+  stack.amount = tonumber(count)
+  stack.id = tonumber(itemId)
+  stack.meta = tonumber(damageValue)
+  stack.uuid = tonumber(item)
+  item = itemTableAPI.getItemFromID(stack.id, stack.meta)
+  stack.name = item.name
+  outTxt = "-id: "..(stack.id).." amt: "..(stack.amount).." mta: "..(stack.meta).." uuid: "..(stack.uuid).." name: "..stack.name
+  print(outTxt)
+  table.insert(stacks3, stack)
+end

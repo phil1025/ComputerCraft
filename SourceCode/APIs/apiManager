@@ -1,0 +1,134 @@
+-- **********************************************************************************************************
+-- API MANAGER 1.0
+--
+-- apiManager provides easy and dynamic access to apis located in the same directory 
+-- as the apiManager file itself
+--
+-- apiManager SETUP:
+-- 1. create/open file "boot.sys" in "C/"
+--      Content:**********************************
+--      -- Load API manager
+--      shell.run("C/MyPrograms/APIs/apiManager") --> (this is the only directory that has to be set manually)
+--      ******************************************
+--      NOTE: the apiManager is not loaded directly via os.loadAPI, 
+--            but is executed for once with shell. 
+--            apiManager then runs its own initialization code, 
+--            including loading itself via os.loadAPI
+-- 2. create/open file "startup" in root directory
+--      Content:**********************************
+--      shell.run("C/boot.sys")
+--      ******************************************
+--
+-- IDEA: boot.sys could be dismissed, basically it is the same startup
+--
+-- HOW TO USE:
+-- "apiManager" is a global variable, so it can be accessed from every script
+-- To load an api write: apiManager.load("myAPI") / or short => api.load("myAPI")
+-- The api directory can be accessed using global variable "apiPath"
+--
+-- **********************************************************************************************************
+-- API functions
+
+function load(name)
+    local api = nil
+    local path = apiPath
+    --print(" loadAPI "..tostring(name).." apiPath: "..tostring(path))
+    if name == "stringUtilsAPI" or name == "stringUtils" or name == "stringAPI" then
+        os.loadAPI(path.."stringUtilsAPI")
+        api = stringUtilsAPI
+    elseif name == "monitorEssentials" or name == "monitorAPI" then
+        os.loadAPI(path.."monitorEssentials")
+        api = monitorEssentials
+    elseif name == "itemTableAPI" or name == "itemTable" then
+        os.loadAPI(path.."itemTable/itemTableAPI")
+        api = itemTableAPI
+    elseif name == "itemDB_API" or name == "itemDB" then
+        os.loadAPI(path.."itemDB/itemDB_API")
+        api = itemDB_API
+    elseif name == "interactiveSorterAPI" or name == "isAPI" or name == "iSorterAPI" then
+        os.loadAPI(path.."interactiveSorterAPI")
+        api = interactiveSorterAPI
+    elseif name == "fileSys" or name == "fsAPI" or name == "filySysAPI" then
+        os.loadAPI(path.."fileSys")
+        api = fileSys
+    elseif name == "turtleLib" or name == "turtleLibAPI" or name == "turtleLib_API" then
+        os.loadAPI(path.."turtleLib")
+    else 
+        print("apiManager.load => unknown name: "..tostring(name))
+    end
+    return api
+end
+
+--***************************************************************************************
+-- This part runs when the boot.sys executes shell.run(<apiManager>)
+-- If apiManager is accessed as an API the shell is not available,
+-- but the code would still be executed to bottom of script. 
+-- If no shell available, script ends here.
+--
+-- Code summary:
+-- 1. gets the apiManager´s directory and stores it to _G.apiPath
+-- 2. initializes itself as an API by calling os.loadAPI(apiPath.."apiManager")
+
+--print("SHELL: "..tostring(shell))
+if shell == nil then
+    return
+end
+
+-- Copy of stringUtilsAPI.split
+local function split(str, pat)
+   --local t = {}  -- NOTE: use {n = 0} in Lua-5.0
+   local t = {n = 0}
+   local fpat = "(.-)" .. pat
+   local last_end = 1
+   local s, e, cap = str:find(fpat, 1)
+   while s do
+      if s ~= 1 or cap ~= "" then
+         table.insert(t, cap)
+      end
+      last_end = e+1
+      s, e, cap = str:find(fpat, last_end)
+   end
+   if last_end <= #str then
+      cap = str:sub(last_end)
+      table.insert(t, cap)
+   end
+   return t
+end
+
+local function getApiPath() 
+    --print ("get API Path => shell: "..tostring(shell))
+    if shell == nil then
+        return
+    end
+    local runProg = shell.getRunningProgram()
+    -- print(" runProg: "..tostring(runProg))
+    local elements = split(runProg, "/")
+    local path = ""
+    for i = 1, #elements do
+        --print("- e "..tostring(i)..": "..elements[i])
+        local e = elements[i]
+        if e ~= "apiManager" then
+            path = path..e.."/"
+        else
+            break
+        end
+    end
+    return path
+end
+
+local function initSelf() 
+    local p = getApiPath()
+    if p ~= nil then
+        _G.apiPath = p
+        --print("apiPath: "..tostring(apiPath))
+        os.loadAPI(apiPath.."apiManager")
+        if apiManager ~= nil then
+            _G.api = apiManager
+            print("using apiManager (short \"api\")")
+        else
+            print("C/boot.sys: apiManager not found")
+        end
+    end
+end
+
+initSelf()

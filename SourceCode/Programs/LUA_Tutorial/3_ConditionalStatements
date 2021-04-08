@@ -1,0 +1,38 @@
+-- Conditional Statements
+-- s://www.youtube.com/watch?v=vZbzCWtWtyY
+
+print("Hello World")
+local x = 5
+local y = 2
+
+print("Variable x: "..x)
+print("Variable y: "..y)
+
+if x==5 then
+    print("High")
+    print("Five!")
+end
+
+print("Done!")
+
+-- if then, elseif then, else
+if x==5 then
+  print("Im 5")
+elseif x<5 then
+  print("x < 5")
+  print("Smaller 5")
+else
+  print("NOT 5")
+end
+
+-- and statement
+if x>5 and y>5 then
+  print("Both greater!")
+else
+  print("Not both greater")
+end
+
+-- or statement
+if x>5 or y<5 then
+  print("One is greater!")
+end
