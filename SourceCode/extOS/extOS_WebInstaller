@@ -5,6 +5,9 @@
 -- boot.sys ?
 -- extOS
 
+local mainPath = "https://raw.githubusercontent.com/phil1025/ComputerCraft/main/"
+local apiPath = "SourceCode/APIs"
+
 local label = os.getComputerLabel()
 if label == nil then
 	print("No computer label set.")
@@ -27,7 +30,6 @@ else
 	print("Overwrite existing installation? (y/n)")
 	local overwrite = read()
 	if overwrite == "y" then
-		
 		-- some revertion instructions to avoid issues due to changes of file locations etc
 		continue = true
 	end
@@ -36,6 +38,12 @@ end
 if continue then
 
 	print("CONTINUE")
+
+	-- INSTALL APIS
+	-- 3 way to move on:
+	-- 		1. hard code git api paths
+	-- 		2. install gitAPI and required APIs and let them fetch the remaining APIs
+	--		3. make a function that finds APIs at given path
 
 end
 
