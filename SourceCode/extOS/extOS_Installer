@@ -30,7 +30,7 @@ if download then
 	file.close()
 	print("Downloaded webInstaller to "..filePath)
 	print("Preparing installation...")
-	sleep(2)
+	sleep(1)
 	shell.run(filePath)
 else 
 	print("Unable to download the file "..webInstallerPath)

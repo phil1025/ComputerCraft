@@ -25,3 +25,5 @@ if not fs.exists(dir) then
 	print("Creating dir: "..dir.."...")
 	fs.makeDir(dir)
 end
+
+fs.delete("temp_extOS_WebInstaller")
