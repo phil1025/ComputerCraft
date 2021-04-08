@@ -13,6 +13,22 @@ print("		           ***** extOS Installer *****")
 print("		           ***************************")
 print("")
 
+local function printWithDots(str, loops)
+	local dots = ""
+	local dotsCount = 0
+	for i = 1, loops do
+		print(str.." "..dots)
+		sleep(0.2)
+		if dotsCount >= 3 then
+			dots = ""
+			dotsCount = 0
+		else
+			dots = dots.."."
+			dotsCount = dotsCount + 1
+		end
+	end
+end
+
 sleep(1)
 
 local mainPath = "https://raw.githubusercontent.com/phil1025/ComputerCraft/main/"
@@ -21,6 +37,9 @@ local download = http.get(mainPath..webInstallerPath)
 
 local installData = nil
 if download then
+	
+    printWithDots("Downloading webInstaller to "..filePath, 12)
+
 	installData = download.readAll()
 	download.close()
 	
@@ -33,8 +52,9 @@ if download then
 	local file = fs.open(filePath,"w")
 	file.write(installData)
 	file.close()
-	print("Downloaded webInstaller to "..filePath)
-	print("Preparing installation...")
+		
+	sleep(1)
+	printWithDots("Preparing installation", 7)
 	sleep(1)
 	shell.run(filePath)
 else 

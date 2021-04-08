@@ -11,9 +11,7 @@ if label == nil then
 	shell.run("label set Computer_"..tostring(os.getComputerID()))
 end
 
-print("label: "..tostring(os.getComputerLabel()))
-
-read()
+--print("label: "..tostring(os.getComputerLabel()))
 
 local continue = false
 
