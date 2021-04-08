@@ -31,4 +31,8 @@ else
 	print("an internet connection!")
 end
 
-print("installData: "..tostring(installData))
+--print("installData: "..tostring(installData))
+
+for line in installData:gmatch("([^\n]*)\n?") do
+    print("line: "..line)
+end

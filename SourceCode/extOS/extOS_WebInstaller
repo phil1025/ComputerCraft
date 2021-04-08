@@ -1,10 +1,25 @@
 -- extOS_WebInstaller: holds the actual information for the current extOS version to install
-1
-2
-3 LINE THREE
-4
-5
-6
 
-8
--- END
+-- Requirements:
+-- startup for extOS boot
+-- boot.sys ?
+-- extOS
+
+local label = os.getComputerLabel()
+print("label: "..label)
+
+local continue = false
+
+-- 1. Check if C/ exists
+--[[
+if not fs.exists("C") then
+	fs.makeDir("C")
+end
+--]]
+
+local dir = "C/extOS/"
+
+if not fs.exists(dir) then
+	print("Creating dir: "..dir.."...")
+	fs.makeDir(dir)
+end
