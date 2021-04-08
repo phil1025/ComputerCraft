@@ -1,6 +1,5 @@
 TODO
-- REPLACE PC 140 with PC 158
-- Copy email ideas here
+- 
 ------------------------------------------------
 
 --updates needed on server:
@@ -16,6 +15,11 @@ apiManager implementation (all)
 new files in 158
 - gitDEV stuff
 - NOTE: PC 140 content moved here, better to work on advanced computer.
+- GNOOR1S_OS => guide to own OS
+- NOTE: DOWN CHANGE ANY CODE IN 158, ONLY VIA GIT PUSH! (exeption GNOOR1S_OS)
+
+computer 159
+- is the experimental pc to test and develop own OS with git features. 
 
 ------------------------------------------------
 SWITCH WHOLE SYSTEM TO WORK WITH FILE ENDINGS => find loadable api files simply by searching for ".api" ending
