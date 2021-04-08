@@ -1,0 +1,6 @@
+// turtle.CompareTo => https://www.youtube.com/watch?v=NiclLTtdzTc
+
+for i=1, 16 do
+    local itemData = turtle.getItemCount(i)
+    print(" - slot "..i..": "..itemData)
+end

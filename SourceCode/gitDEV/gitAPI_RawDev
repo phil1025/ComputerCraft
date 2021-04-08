@@ -1,0 +1,91 @@
+--[[
+GIT json data structure
+-------------------------------------------------
+"sha": "cd8274d15fa3ae2ab983129fb037999f264ba9a7",
+  "url": "https://api.github.com/repos/octocat/Hello-World/trees/cd8274d15fa3ae2ab983129fb037999f264ba9a7",
+  "tree": [
+    {
+      "path": "file.rb",
+      "mode": "100644",
+      "type": "blob",
+      "size": 132,
+      "sha": "7c258a9869f33c1e1e1f74fbb32f07c86cb5a75b",
+      "url": "https://api.github.com/repos/octocat/Hello-World/git/blobs/7c258a9869f33c1e1e1f74fbb32f07c86cb5a75b"
+    },
+    ...
+-------------------------------------------------
+    
+--]]
+
+-- DOWNLOAD FILE
+function get(repoFile, saveTo)
+    --https://raw.github.com/phil1025/ComputerCraft/
+    --local download = http.get("https://raw.github.com/myName/repo/repoFile") --This will make 'download' hold the contents of the file.
+    --local repoPath = "https://raw.github.com/phil1025/ComputerCraft/"
+    --local download = http.get(repoPath..repoFile) --This will make 'download' hold the contents of the file.
+    
+    local download = http.get("https://raw.githubusercontent.com/phil1025/ComputerCraft/main/ComputerCraft_Notes.txt?token=AEFBZ3BWD7OZO4YVV5XEYVDANUQ3M")
+    
+    if download then --checks if download returned true or false
+        local handle = download.readAll() --Reads everything in download
+        download.close() --remember to close the download!
+        local file = fs.open(saveTo,"w") --opens the file defined in 'saveTo' with the permissions to write.
+        file.write(handle) --writes all the stuff in handle to the file defined in 'saveTo'
+        file.close() --remember to close the file!
+        print("Downloaded ... to ...")
+    else 
+        print("Unable to download the file "..repoFile)
+        print("Make sure you have the HTTP API enabled or")
+        print("an internet connection!")
+    end
+end
+
+-- FETCH ITEMS 
+function fetch()
+    --> http://www.computercraft.info/forums2/index.php?/topic/28985-download-folder-from-github/
+    --> Look up structure: https://docs.github.com/en/rest/reference/git#trees
+    --> Git Repo: https://github.com/phil1025/ComputerCraft
+    print("")
+    print("FETCH")
+    
+    local gitURL = "https://api.github.com/repos/phil1025/ComputerCraft/git/trees/main?recursive=1"
+    local request = http.get(gitURL)
+    local data = request.readAll()
+    request.close()
+    
+    --print("eqRead: "..tostring(data))
+    --local dump = fs.open("gitDEV/dataDump", "w")
+    --dump.write(data)
+    --dump.close()
+
+    -- json_lua --> WORKS!!!!!
+    print("")
+    os.loadAPI("gitDEV/json_lua-master/json_lua")
+    print("json_lua: "..tostring(json_lua))
+    local decoded = json_lua.unwrap(data)
+    print("decoded: "..tostring(decoded).." len: "..tostring(table.getn(decoded)))
+    local sha = decoded.sha
+    print("sha: "..tostring(sha))
+    local url = decoded.url
+    print("url: "..tostring(url))
+    local tree = decoded.tree
+    print("tree: "..tostring(tree).." len: "..table.getn(tree))
+
+    for i = 1, #tree do
+        print("")
+        local item = tree[i]
+        print("item: "..tostring(item))
+        print("path: "..tostring(item.path))
+        print("mode: "..tostring(item.mode))
+        print("type: "..tostring(item.type))
+        print("size: "..tostring(item.size))
+        print("sha: "..tostring(item.sha))
+        print("url: "..tostring(item.url))
+        read()
+    end
+
+    print("")
+
+    local truncated = decoded.truncated
+    print("truncated: "..tostring(truncated))
+end

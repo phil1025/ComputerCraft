@@ -1,0 +1,16 @@
+if http then print("HTTP is enabled") else print("HTTP is disabled!") end
+--[[
+local headers = {
+  [ "User-Agent" ] = "A custom user-agent!", -- Overrides the default User-Agent.
+  [ "Hi" ] = "Hello" -- A non-standard custom header field.
+}
+
+local ret = http.get( "http://example.com/", headers )
+
+local a = headers["User-Agent"]
+local b = headers["Hi"]
+print(tostring(a))
+print(tostring(b))
+print("ret: "..tostring(ret))
+print(ret["Hi"])
+--]]

@@ -1,0 +1,165 @@
+--http://www.computercraft.info/forums2/index.php?/topic/15760-how-to-use-tables/
+--Part I - Creating a table 
+
+--A table is a list of values, which are all stored under one variable.
+--In Lua, a table is an associative array, which means that any values 
+--stored in one are referenced by a key, which can be a number, string, 
+--boolean or even another table!
+
+--To make a table, simply do this:
+local myTable = {}
+
+--The variable myTable is now an empty table.
+
+--Part II - Numbers as keys 
+
+--If you already have a table, you can insert a value referenced by a 
+--number into the table with one of these methods:
+
+-- This...
+myTable[1] = "This is item 1 of the table"
+-- ... does the same as this
+myTable:insert(1, "This is item 1 of the table")
+
+--You can then refer to this value as:
+print(myTable[1]) -- Prints out "This is item 1 of the table"
+
+--You can replace 1 with any number you like, and it will still work. 
+--Note that myTable:insert() will shift the positions of the other 
+--values in a table, whereas referencing the table directly 
+--(myTable[1] = "...") will overwrite the value at position 1.
+
+--Part III - Strings as keys 
+
+--If you are creating an array with no specific order 
+--(e.g. a username and password table) you can also use strings as a key:
+myTable["ZudoHackz"] = "MyPassword"
+myTable["SomeoneElse"] = "SomePassword"
+
+--You can't use myTable:insert() with strings (I think). 
+--To reference a value, you can just do:
+print(myTable["ZudoHackz"])
+-- Or
+print(myTable.ZudoHackz)
+
+--Part IV - Initializing a table with data already in it 
+local myTable = {}
+myTable[1] = "blah1"
+myTable[2] = "blah2"
+myTable[3] = "blah3"
+--...
+
+--This works, but it is quicker and shorter to do this:
+local myTable = {"blah1","blah2","blah3"}
+
+--If you create a table like this, 
+--myTable[1] would be set to "blah1", myTable[2] would be "blah2" etc.
+
+--You can also do this:
+myTable = {[1] = "blah1", [2] = "blah2", [3] = "blah3"}
+
+--If you do it this way, you can change the order easily:
+local myTable = {[3] = "blah1", [2] = "blah2", [1] = "blah3"}
+
+--Or even do this:
+local myTable = {[1] = "blah1", [6] = "blah2", [300] = "blah3"}
+
+--This also works with anything else as a key:
+local myTable = {["one"] = "blah1", ["two"] = "blah2", ["three"] = "blah3"}
+
+--Part V - Using tables 
+
+--Tables are used for storing similar information. 
+--But, they can also be used for other things, like:
+
+--Capturing return values 
+
+--Some functions, like os.pullEvent() return different amounts of return values. 
+--You could do something like this:
+local a, b, c, d, e = os.pullEvent()
+print(a)
+print(B)/>/>/>
+print(c)
+print(d)
+print(e)
+
+--but you still can't be sure you have saved all the return values. 
+--However, a setup like this:
+local myEventData = {os.pullEvent()}
+for _, value in pairs(myEventData) do
+print(v)
+end
+
+--would definitely capture all of the values, and definitely return them all. 
+--More on the for loop later. Anyway, if you put the function call in curly { } brackets,
+--it will return a table. myEventData[2] in the second example is equal to b in the first example.
+
+--Please read 
+
+--IP.Board screwed up the third line of the first example in this section. It is print b but with brackets, rather than spaces.
+
+--This isn't really a use of the table, but it is very useful to learn about
+--Iterating through a table 
+
+--With the pairs() function, you can iterate through a table. Here is an example:
+local myTable = {"blah1","blah2","blah3"}
+for key, value in pairs(myTable) do
+print("The value of the key " .. key .. " is ".. value)
+end
+
+--This piece of code repeats 3 times (there are three values in the table) and prints:
+--The value of the key 1 is blah1
+--The value of the key 2 is blah2
+--The value of the key 3 is blah3
+
+--So this can be very useful. How about this?
+local myTable = {"blah1","blah2","blah3"}
+local function isInTable(table, value)
+for _, v in pairs(table) do -- Use _ if you don't need that return value.
+  if v == value then
+   return true, k
+  end
+end
+return false
+end
+
+isInTable(myTable, "blah1") -- Returns [true, 1]
+isInTable(myTable, "blah2") -- Returns [true, 2]
+
+isInTable(myTable, "blah3") -- Returns [true, 3]
+isInTable(myTable, "blah4") -- Returns false
+
+--So iterating through tables is very, very useful.
+
+--************************************************************************************************
+
+-- s://www.youtube.com/watch?v=1YMplg5ihYI&list=PLaiPn4ewcbkHYflo2jl0OuNaHK6Mj-koG&index=7&t=15s
+-- Tables are arrays in LUA!
+
+local colors = {"blue", "red", "green" }
+
+print(colors[1]) -- first index is 1!
+
+for i = 1, 4 do
+  print(colors[i])
+end
+
+local colorCodes = {white = 1, orange = 42, magenta = 3 }
+print(colorCodes["orange"])
+
+for key,value in pairs(colorCodes) do
+  print(key.."="..value)
+end
+
+local stuff = {"blue", {"stuff1", "stuff2"}, "green"}
+print(stuff[1])
+print(stuff[2][1])
+print(stuff[2][2])
+print(stuff[3])
+
+-- Get the length of a table
+someTable = { "bla", "blo" }
+local len = table.getn(someTable)
+
+
+
