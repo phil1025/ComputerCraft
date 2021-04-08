@@ -5,71 +5,72 @@
 
 -- 1. check if extOS is present, check version => ask on overwrite
 
-print("Start installation extOS? (y/n)")
+local osName = "extOS"
+
+print(osName.." installer found on disk.")
+print("Do you want to install "..osName.."? (y/n)")
 
 local install = tostring(read())
-if not install == "y" then
-	return
-end
+if install == "y" then
 
-term.clear()
-term.setCursorPos(1, 1)
+	term.clear()
+	term.setCursorPos(1, 1)
 
-print("	            ***************************")
-print("		           ***** extOS Installer *****")
-print("		           ***************************")
-print("")
+	print("	            ***************************")
+	print("		           ***** "..osName.." Installer *****")
+	print("		           ***************************")
+	print("")
 
-sleep(1)
+	sleep(1)
 
-local mainPath = "https://raw.githubusercontent.com/phil1025/ComputerCraft/main/"
-local webInstallerPath = "SourceCode/extOS/extOS_WebInstaller"
-local download = http.get(mainPath..webInstallerPath)
+	local mainPath = "https://raw.githubusercontent.com/phil1025/ComputerCraft/main/"
+	local webInstallerPath = "SourceCode/extOS/extOS_WebInstaller"
+	local download = http.get(mainPath..webInstallerPath)
 
-local installData = nil
-if download then
-	
-	installData = download.readAll()
-	download.close()
-	
-	local filePath = "temp_extOS_WebInstaller"
-	
-	--printWithDots("Downloading webInstaller", 12)
-	local x, y = term.getCursorPos()
-	local sleepTime = 0.2
-	for i = 0, 100 do
-	    term.setCursorPos(1, y)
-	    print("Downloading webInstaller ... "..i)
-	    sleep(sleepTime)
-	    sleepTime = sleepTime / 2.0
-	end
-	
-	
-	if fs.exists(filePath) then
-		fs.delete(filePath)
-	end
-	
-	local file = fs.open(filePath,"w")
-	file.write(installData)
-	file.close()
+	local installData = nil
+	if download then
 		
-	sleep(1)
-	print("Preparing installation")
-	sleep(1)
-	shell.run(filePath)
-else 
-	print("Unable to download the file "..webInstallerPath)
-	print("Make sure you have the HTTP API enabled or")
-	print("an internet connection!")
+		installData = download.readAll()
+		download.close()
+		
+		local filePath = "temp_"..osName.."_WebInstaller"
+		
+		--printWithDots("Downloading webInstaller", 12)
+		local x, y = term.getCursorPos()
+		local sleepTime = 0.2
+		for i = 0, 100 do
+			term.setCursorPos(1, y)
+			print("Downloading webInstaller ... "..i)
+			sleep(sleepTime)
+			sleepTime = sleepTime / 2.0
+		end
+		
+		
+		if fs.exists(filePath) then
+			fs.delete(filePath)
+		end
+		
+		local file = fs.open(filePath,"w")
+		file.write(installData)
+		file.close()
+			
+		sleep(1)
+		print("Preparing installation...")
+		sleep(1)
+		shell.run(filePath)
+	else 
+		print("Unable to download the file "..webInstallerPath)
+		print("Make sure you have the HTTP API enabled or")
+		print("an internet connection!")
+	end
+
+	--print("installData: "..tostring(installData))
+
+	-- OBSOLETE => webInstaller is not data but a program, needs execution!
+	-- So instead it has to be saved to disk!
+	--[[
+	for line in installData:gmatch("([^\n]*)\n?") do
+		print("line: "..line)
+	end
+	--]]	
 end
-
---print("installData: "..tostring(installData))
-
--- OBSOLETE => webInstaller is not data but a program, needs execution!
--- So instead it has to be saved to disk!
---[[
-for line in installData:gmatch("([^\n]*)\n?") do
-    print("line: "..line)
-end
---]]
-
