@@ -13,26 +13,6 @@ print("		           ***** extOS Installer *****")
 print("		           ***************************")
 print("")
 
-local function printWithDots(str, loops)
-	local dots = ""
-	local dotsCount = 1
-	local x, y = term.getCursorPos()
-	for i = 1, loops do
-	    if dotsCount < 4 then
-		    dots = dots.."."
-			dotsCount = dotsCount + 1
-		else
-		    print("RESET")
-			dots = ""
-			dotsCount = 1
-		end
-	    term.setCursorPos(1, y)
-		term.write(i.." "..str.." "..dots)
-		sleep(0.5)
-	end
-	print("")
-end
-
 sleep(1)
 
 local mainPath = "https://raw.githubusercontent.com/phil1025/ComputerCraft/main/"
@@ -47,7 +27,16 @@ if download then
 	
 	local filePath = "temp_extOS_WebInstaller"
 	
-	printWithDots("Downloading webInstaller", 12)
+	--printWithDots("Downloading webInstaller", 12)
+	local x, y = term.getCursorPos()
+	local sleepTime = 0.2
+	for i = 0, 100 do
+	    term.setCursorPos(1, y)
+	    print("Downloading webInstaller ... "..i)
+	    sleep(sleepTime)
+	    sleepTime = sleepTime / 2.0
+	end
+	
 	
 	if fs.exists(filePath) then
 		fs.delete(filePath)
@@ -58,7 +47,7 @@ if download then
 	file.close()
 		
 	sleep(1)
-	printWithDots("Preparing installation", 7)
+	print("Preparing installation")
 	sleep(1)
 	shell.run(filePath)
 else 
