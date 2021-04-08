@@ -1,8 +1,0 @@
-local pw = ""
-
-while pw ~= "dw20" do
-  term.write("Enter Password: ")
-  pw = read()
-end
-
-print("Correct Password entered")

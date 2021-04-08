@@ -1,4 +1,0 @@
-turtle.forward()
-turtle.up()
-turtle.back()
-turtle.down()

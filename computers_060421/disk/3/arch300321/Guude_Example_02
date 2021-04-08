@@ -1,9 +1,0 @@
---https://youtu.be/90p7BCJXBpY?t=1315
-
-p = peripheral.wrap("top")
-print("p: "..tostring(p))
-local t = { p.list(4) }
-print(t)
-print("0 ", # t)
-print(t[1])
---print(# t[1])

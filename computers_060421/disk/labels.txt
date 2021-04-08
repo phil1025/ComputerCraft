@@ -1,3 +1,0 @@
-1 disk "LUA Tutorials"
-2 disk "Turtle Programs 01"
-3 disk "InteractiveSorter"

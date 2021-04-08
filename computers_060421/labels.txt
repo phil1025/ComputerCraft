@@ -1,7 +1,0 @@
-154 MeiTurtle
-155 StorageManagingTurtle_01
-156 "MeiDiggingTurtle"
-157 "MiningTurtle_02"
-140 "PC"
-158 "AdvComputer_01"
-145 "Computer_02"

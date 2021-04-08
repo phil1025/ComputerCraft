@@ -1,2 +1,0 @@
--- Load API manager
-shell.run("C/MyPrograms/APIs/apiManager")
