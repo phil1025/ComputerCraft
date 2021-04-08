@@ -39,6 +39,7 @@ some basic programs
 
 - entities
 	OS => a sort of ccOS extension (starts all apis at startup, does startup checks, menus, logics,...)
+		  installs stuff into correct folders, etc...
 	Program => a single script that is called from shell
 	API => a single script that is called from os.loadAPI
 	Software => A interface on top of a main program with sub programs and apis

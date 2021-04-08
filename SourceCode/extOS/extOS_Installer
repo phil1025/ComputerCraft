@@ -1,0 +1,34 @@
+-- This is the installer for disks.
+-- It does not contain any install data itself, only connects to a static git path and downloads the webInstaller
+-- NOTE: This is the only script that has to be brought into Minecraft CC manually.
+--		 Copy it to a disk and get started.
+
+-- 1. check if extOS is present, check version => ask on overwrite
+
+term.clear()
+term.setCursorPos(1, 1)
+
+print("	            ***************************")
+print("		           ***** extOS Installer *****")
+print("		           ***************************")
+print("")
+
+local mainPath = "https://raw.githubusercontent.com/phil1025/ComputerCraft/main/"
+local webInstallerPath = "SourceCode/extOS/extOS_WebInstaller"
+local download = http.get(mainPath..webInstallerPath)
+
+local installData = nil
+if download then
+	installData = download.readAll()
+	download.close()
+	--local file = fs.open(saveTo,"w")
+	--file.write(handle)
+	--file.close()
+	--print("Downloaded "..webInstallerPath.." to "..saveTo)
+else 
+	print("Unable to download the file "..webInstallerPath)
+	print("Make sure you have the HTTP API enabled or")
+	print("an internet connection!")
+end
+
+print("installData: "..tostring(installData))
