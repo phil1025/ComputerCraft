@@ -7,6 +7,7 @@
 
 local label = os.getComputerLabel()
 if label == nil then
+	print("No computer label set. Autosetting label to prevent loss of data!")
 	shell.run("label set Computer_"..tostring(os.getComputerID()))
 end
 
