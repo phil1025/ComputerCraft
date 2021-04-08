@@ -21,10 +21,13 @@ local installData = nil
 if download then
 	installData = download.readAll()
 	download.close()
-	--local file = fs.open(saveTo,"w")
-	--file.write(handle)
-	--file.close()
-	--print("Downloaded "..webInstallerPath.." to "..saveTo)
+	
+	local filePath = "temp_extOS_WebInstaller"
+	local file = fs.open(filePath,"w")
+	file.write(handle)
+	file.close()
+	print("Downloaded "..webInstallerPath.." to "..filePath)
+	shell.run(filePath)
 else 
 	print("Unable to download the file "..webInstallerPath)
 	print("Make sure you have the HTTP API enabled or")
@@ -33,6 +36,11 @@ end
 
 --print("installData: "..tostring(installData))
 
+-- OBSOLETE => webInstaller is not data but a program, needs execution!
+-- So instead it has to be saved to disk!
+--[[
 for line in installData:gmatch("([^\n]*)\n?") do
     print("line: "..line)
 end
+--]]
+
