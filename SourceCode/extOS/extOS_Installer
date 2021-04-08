@@ -15,18 +15,22 @@ print("")
 
 local function printWithDots(str, loops)
 	local dots = ""
-	local dotsCount = 0
+	local dotsCount = 1
+	local x, y = term.getCursorPos()
 	for i = 1, loops do
-		print(str.." "..dots)
-		sleep(0.2)
-		if dotsCount >= 3 then
-			dots = ""
-			dotsCount = 0
-		else
-			dots = dots.."."
+	    if dotsCount < 4 then
+		    dots = dots.."."
 			dotsCount = dotsCount + 1
+		else
+		    print("RESET")
+			dots = ""
+			dotsCount = 1
 		end
+	    term.setCursorPos(1, y)
+		term.write(i.." "..str.." "..dots)
+		sleep(0.5)
 	end
+	print("")
 end
 
 sleep(1)
@@ -38,12 +42,12 @@ local download = http.get(mainPath..webInstallerPath)
 local installData = nil
 if download then
 	
-    printWithDots("Downloading webInstaller to "..filePath, 12)
-
 	installData = download.readAll()
 	download.close()
 	
 	local filePath = "temp_extOS_WebInstaller"
+	
+	printWithDots("Downloading webInstaller", 12)
 	
 	if fs.exists(filePath) then
 		fs.delete(filePath)
