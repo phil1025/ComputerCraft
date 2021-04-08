@@ -6,7 +6,11 @@
 -- extOS
 
 local label = os.getComputerLabel()
-print("label: "..tostring(label))
+if label == nil then
+	shell.run("label set Computer_"..tostring(os.getComputerID()))
+end
+
+print("label: "..tostring(os.getComputerLabel()))
 
 read()
 
@@ -26,4 +30,7 @@ if not fs.exists(dir) then
 	fs.makeDir(dir)
 end
 
+
 fs.delete("temp_extOS_WebInstaller")
+
+print("extOS installed!")
