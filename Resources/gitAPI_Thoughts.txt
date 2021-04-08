@@ -1,0 +1,51 @@
+git approach
+
+1. function to get repo tree
+   function to download the files
+2. computers look for their specific "setup" file on github (holds list with allowed scripts)
+3. if the setup file is signable like someFile.setup, then a setup file could contain further setup files
+	=> for example script collections that are commonly needed could be defined in a global setup file
+	outside the computer directories
+4. another way would be to have that global setup file outside computers, and they just look for that aswell
+5. NOTE: data files must have a file ending and must be added to a gitAPI .gitignore equivalent
+		 Otherwise the computers local data might be overwritten by gitAPI pull
+		 
+		 
+Computer Config Files:
+-- .cfg also have the path to a setup file, that is used for more than 1 computer/turtle
+
+-- NEEDS:
+	- startup 
+	- boot.sys
+	- api`s
+	- programs
+	- "static" data like FTB_Lite1_ItemDump
+
+-- How to roll out new Computer
+	Have a boot disk with most basic config (setup starts from disk/startup, installs data on computer)
+		- startup
+		- boot.sys 
+		- gitAPI + ev. dependencies
+		- apiManager
+	OR do it somehow via a RootComputer (the real central pc) over wireless modems
+		
+	OR
+look at the whole thing generally more like a OS extension that simply installs all 
+apis, 
+api manager, 
+some basic programs
+=> makes OS alike control logics possible
+=> checks for updates on github at start
+
+- entities
+	OS => a sort of ccOS extension (starts all apis at startup, does startup checks, menus, logics,...)
+	Program => a single script that is called from shell
+	API => a single script that is called from os.loadAPI
+	Software => A interface on top of a main program with sub programs and apis
+				Software uses programs and apis (ex: Software Download tool for github)
+
+1. os installer
+2. OS itself
+3. Software 
+	- "AppStore" => a So
+	- 
