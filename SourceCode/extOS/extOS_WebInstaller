@@ -28,11 +28,15 @@ else
 	if overwrite == "y" then
 		
 		-- some revertion instructions to avoid issues due to changes of file locations etc
-	else
-		return false
+		continue = true
 	end
 end
 
+if continue then
+
+	print("CONTINUE")
+
+end
 
 fs.delete("temp_extOS_WebInstaller")
 
