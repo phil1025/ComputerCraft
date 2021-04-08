@@ -1,10 +1,21 @@
+TODO
+- REPLACE PC 140 with PC 158
+- Copy email ideas here
+------------------------------------------------
+
 --updates needed on server:
 x_Turtles (new Tutorial)
 LUA_Documentation
 
 --update needed on local:
-from PC 140 to 157(turtle):
+obsolete => moving to github
+
+--update from PC 140 to 157(turtle):
 apiManager implementation (all)
+
+new files in 158
+- gitDEV stuff
+- NOTE: PC 140 content moved here, better to work on advanced computer.
 
 ------------------------------------------------
 SWITCH WHOLE SYSTEM TO WORK WITH FILE ENDINGS => find loadable api files simply by searching for ".api" ending
@@ -58,6 +69,19 @@ more DB Attributes:
 - Explorer Turtle => auto explore and return
 - Quarry Turtle
 - Basically turtles working together to setup quarries, oil pumps, resource chains to home, etc..
+
+More turtle ideas:
+- turtle error status Report sending api
+- visualize location / computer map api
+- turtle remote control Interface api
+- compareto sorting System api -> Group Slots of same Type -> determine items by quantity 
+- Slot compare with example item identification
+- Slot reserving api 
+
+gathering terrain info:
+turtles should store pos xyz and slot id for each mined item. in base Slot stacks get identified by itemsorter => 3d mining history, map colors 
+=> maybe in combination with ported itemsorter have a turtle Team dig surface Blocks,  
+   identify them and bring them back in place => carthografer turtle  
 
 Turtle program ConstructTunnel aka turtleAPI features:
 - place torches, torches reserved slot
