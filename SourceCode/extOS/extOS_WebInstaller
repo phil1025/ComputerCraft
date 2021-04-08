@@ -6,7 +6,7 @@
 -- extOS
 
 local label = os.getComputerLabel()
-print("label: "..label)
+print("label: "..tostring(label))
 
 read()
 
