@@ -45,7 +45,6 @@ if install == "y" then
 			sleepTime = sleepTime / 2.0
 		end
 		
-		
 		if fs.exists(filePath) then
 			fs.delete(filePath)
 		end

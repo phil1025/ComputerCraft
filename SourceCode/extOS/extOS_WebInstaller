@@ -25,6 +25,12 @@ else
 	print("A directory \""..dir.."\" already exists!")
 	print("Overwrite existing installation? (y/n)")
 	local overwrite = read()
+	if overwrite == "y" then
+		
+		-- some revertion instructions to avoid issues due to changes of file locations etc
+	else
+		return false
+	end
 end
 
 
