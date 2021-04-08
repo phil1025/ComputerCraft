@@ -21,6 +21,7 @@ local dir = "C/extOS/"
 if not fs.exists(dir) then
 	print("Creating dir: "..dir.."...")
 	fs.makeDir(dir)
+	continue = true
 else
 	print("A directory \""..dir.."\" already exists!")
 	print("Overwrite existing installation? (y/n)")

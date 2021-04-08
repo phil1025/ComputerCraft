@@ -41,7 +41,7 @@ if install == "y" then
 		for i = 0, 100 do
 			term.setCursorPos(1, y)
 			print("Downloading webInstaller ... "..i)
-			sleep(sleepTime)
+			--sleep(sleepTime)
 			sleepTime = sleepTime / 2.0
 		end
 		
