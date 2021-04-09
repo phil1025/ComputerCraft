@@ -37,6 +37,18 @@ drawMenu1 = function()
     print("[EXIT]")
 end
 
+reload = function()
+	stop()
+	clear()
+	running = false
+	shell.run("/GNOOR1S_OS/gui_p3")
+end
+
+redraw = function()
+    drawDesktop()
+    drawTaskBar()
+end
+
 drawRightClickMenu = function(x, y)
     term.setBackgroundColor(colors.white)
     term.setTextColor(colors.lime)
@@ -63,19 +75,17 @@ drawRightClickMenu = function(x, y)
             --init()
 			_ms = 0
 			_rcm = 0
+			reload()
             break
         -- return
         else
             redraw()
+			reload()
             break
         end
     end
+	--init() -- He moved it here!
     _rcm = 0
-end
-
-redraw = function()
-    drawDesktop()
-    drawTaskBar()
 end
 
 drawTaskBar = function()
