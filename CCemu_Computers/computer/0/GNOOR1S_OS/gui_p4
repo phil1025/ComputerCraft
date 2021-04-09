@@ -3,7 +3,8 @@
 -- ep7 --> https://www.youtube.com/watch?v=1fvGtika810&list=PLj9MW6GM-9dlchydnAo9KGukVy2aMmorN&index=6
 -- THIS VERSION FOLLOWS TUTORIAL EP7
 -- Topics: 
---          - Restart button
+--          - Task bar menu => Restart button
+--			- Right click menu => open/edit bgImange in paint
 
 
 -- Variables  **********************************
@@ -33,6 +34,8 @@ drawMenu1 = function()
     term.setBackgroundColor(colors.orange)
     term.setTextColor(colors.black)
     print("[EXIT]")
+	term.setCursorPos(1, 3)
+	term.write("[REBOOT]")
 end
 
 reload = function()
@@ -51,13 +54,19 @@ drawRightClickMenu = function(x, y)
     term.setBackgroundColor(colors.white)
     term.setTextColor(colors.lime)
     term.setCursorPos(x, y)
-    term.write(" [LUA] ")
+    term.write("    [LUA]    ")
     term.setCursorPos(x, y + 1)
-    term.write(" [IDE] ")
+    term.write("    [IDE]    ")
+	term.setCursorPos(x, y + 2)
+	--term.setTextColor(colors.lime)
+	term.write(" [BgImage] ")
+	
+	local charLen = 11
     local event, button, xPos, yPos = os.pullEvent("mouse_click")
+	
     while true do
         -- open lua prompt
-        if button == 1 and xPos >= x and xPos <= (x + 7) and yPos == y then
+        if button == 1 and xPos >= x and xPos <= (x + charLen) and yPos == y then
             running = false
             term.setBackgroundColor(colors.black)
             clear()
@@ -68,14 +77,20 @@ drawRightClickMenu = function(x, y)
             shell.run("lua")
             break
         -- open OS in lua IDE
-        elseif button == 1 and xPos <= (x + 7) and xPos >= x and yPos == (y + 1) then
-            shell.run("edit", "/GNOOR1S_OS/gui_p3") -- MAKE SURE TO START WITH "/"!
-            --init()
-			_ms = 0
-			_rcm = 0
-			reload()
+        elseif button == 1 and xPos <= (x + charLen) and xPos >= x and yPos == (y + 1) then
+            shell.run("edit", "/GNOOR1S_OS/gui_p4") -- MAKE SURE TO START WITH "/"!
+			--_ms = 0
+			--_rcm = 0
+			init()
+			--reload()
             break
-        -- return
+		elseif button == 1 and xPos <= (x + charLen) and xPos >= x and yPos == (y + 2) then
+			shell.run("paint", "/GNOOR1S_OS/_backgrounds/desktop_img")
+			--_ms = 0
+			--_rcm = 0
+			_dt = paintutils.loadImage("/GNOOR1S_OS/_backgrounds/desktop_img")
+			init()
+			break
         else
             redraw()
 			--reload()
@@ -99,7 +114,7 @@ end
 drawDesktop = function()
     term.setBackgroundColor(colBackground)
     clear()
-    paintutils.drawImage(_dt, 1, 3)
+    paintutils.drawImage(_dt, 1, 1)
 end
 
 loadConfig = function() -- main config function
@@ -137,6 +152,20 @@ runTime = function()
         elseif _ms == 0 and _rcm == 0 and button == 2 then
             _rcm = 1
             drawRightClickMenu(x, y)
+		elseif _ms == 1 and _rcm == 0 and button == 1 and x < 9 and y == 3 then
+			clear()
+			term.setBackgroundColor(colors.cyan)
+			term.clear()
+			term.setCursorPos(1, 1)
+			term.setTextColor(colors.lime)
+			term.write("Rebooting")
+			textutils.slowPrint("... Loading") ----> OUTPUTS CHAR AFTER CHAR!
+			sleep(1)
+			--os.reboot() --> THIS IS MORE USEFULL (a startup would reboot the os)
+			shell.run("/GNOOR1S_OS/gui_p3") --> this starts a new instance while this one is still running (dirty)
+			--init()
+			error()
+			--stop()
         end
     end
 end
