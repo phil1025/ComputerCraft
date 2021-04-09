@@ -1,0 +1,94 @@
+-- Code by GNOOR1S_OS
+-- ep1 --> https://www.youtube.com/watch?v=BO4vsfDMPFo&list=PLj9MW6GM-9dlchydnAo9KGukVy2aMmorN
+-- ep2 --> https://www.youtube.com/watch?v=LdfXJO_Srpo&list=PLj9MW6GM-9dlchydnAo9KGukVy2aMmorN&index=2
+
+-- THIS VERSION FOLLOWS TUTORIAL EP1 and EP2
+-- Topics: 
+--          - Basic code structure
+--          - Background images
+--          - Task Bar
+--          - Task Bar Menu
+
+-- Variables  **********************************
+version = 1.0
+running = true
+
+    -- Images
+    _dt = paintutils.loadImage("GNOOR1S_OS/_backgrounds/desktop_img")
+
+    -- Boolians
+    _ms = 0 -- menuSelected => the mode of the menu bar
+
+-- Functions ***********************************
+clear = function()
+    term.clear()
+    term.setCursorPos(1, 1)
+end
+
+drawMenu1 = function()
+    term.setCursorPos(1, 2)
+    term.setBackgroundColor(colors.orange)
+    term.setTextColor(colors.black)
+    print("[EXIT]")
+    --while true do
+    --end
+end
+
+drawTaskBar = function()
+    term.setCursorPos(1, 1)
+    term.setBackgroundColor(colors.blue)
+    term.clearLine()
+    term.setCursorPos(1, 1)
+    term.setBackgroundColor(colors.lime)
+    term.setTextColor(colors.white)
+    term.write("[Menu]")
+end
+
+drawDesktop = function()
+    term.setBackgroundColor(colors.lightGray)
+    clear()
+    paintutils.drawImage(_dt, 1, 3)
+end
+
+stop = function() --exit OS
+    clear()
+    running = false
+    term.setTextColor(colors.lime)
+    print("Thanks for using GNOS")
+    term.setTextColor(colors.white)
+    term.setBackgroundColor(colors.black)
+    sleep(1)
+    term.setCursorPos(1, 1)
+    term.clear()
+end
+
+runTime = function()
+    while running do
+        event, button, x, y = os.pullEvent("mouse_click")
+        --[[ -- tutorial episode 1 version
+        if event == "mouse_click" then
+            clear()
+            running = false
+        end
+        --]]
+        if _ms == 0 and button == 1 and x < 7 and y == 1 then
+            drawMenu1()
+            _ms = 1
+        elseif _ms == 1 and button == 1 and x < 7 and y == 2 then
+            stop()
+        elseif _ms == 1 and button == 1 and x < 7 and y == 1 then
+            init()
+        end
+    end
+end
+
+init = function()
+    _ms = 0
+    drawDesktop()
+    drawTaskBar()
+    runTime()
+end
+
+-- Main Stuff  *********************************
+
+init()
