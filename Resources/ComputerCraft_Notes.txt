@@ -1,5 +1,13 @@
 TODO
-- 
+-> Tutorial for normal computers/turtles OS: https://www.youtube.com/watch?v=XPpMkDfzwB8
+- another OS tutorial: https://www.youtube.com/watch?v=G7cevOEpv80&list=PLbEl5EepX3La-C7PiR-r56XsTnF5RpJMi&index=1
+- RFID ???! => https://www.youtube.com/watch?v=ECn3L5hQHGA
+- touchscreen: https://www.youtube.com/watch?v=kUuq3Yp8nWI
+- clickable buttons: https://www.youtube.com/watch?v=Kx-gbyyU0WQ
+- checkout os.time: https://www.youtube.com/watch?v=3a813-pOC6E
+- more on custom apis: https://www.youtube.com/watch?v=CvTccSJl5Ms
+- check out: https://www.youtube.com/watch?v=1O6NO6dM0tI
+- door lock system: https://www.youtube.com/watch?v=A1M13_lZUUY
 ------------------------------------------------
 
 --updates needed on server:
@@ -13,10 +21,10 @@ obsolete => moving to github
 apiManager implementation (all)
 
 new files in 158
-- gitDEV stuff
-- NOTE: PC 140 content moved here, better to work on advanced computer.
-- GNOOR1S_OS => guide to own OS
-- NOTE: DOWN CHANGE ANY CODE IN 158, ONLY VIA GIT PUSH! (exeption GNOOR1S_OS)
+- gitDEV stuff (most recent)
+- NOTE: PC 140 content was moved to 158, better to work on advanced computer.
+- GNOOR1S_OS => guide to own OS [DEPRECATED, most recent version is already in repo (\GitRepo\CCemu_Computers\computer\0\GNOOR1S_OS\)
+- NOTE: DONT CHANGE ANY CODE IN 158, ONLY VIA GIT PUSH!
 
 computer 159
 - is the experimental pc to test and develop own OS with git features. 
