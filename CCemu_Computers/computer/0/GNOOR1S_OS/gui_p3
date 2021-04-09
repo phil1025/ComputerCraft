@@ -80,7 +80,7 @@ drawRightClickMenu = function(x, y)
         -- return
         else
             redraw()
-			reload()
+			--reload()
             break
         end
     end
