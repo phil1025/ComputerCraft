@@ -1,9 +1,11 @@
 -- Code by GNOOR1S_OS
 -- ep3 --> https://www.youtube.com/watch?v=QSNdcixCQxE&list=PLj9MW6GM-9dlchydnAo9KGukVy2aMmorN&index=3
-
--- THIS VERSION FOLLOWS TUTORIAL EP3
+-- ep4 --> https://www.youtube.com/watch?v=UCJ91hjixPg&list=PLj9MW6GM-9dlchydnAo9KGukVy2aMmorN&index=4
+-- THIS VERSION FOLLOWS TUTORIAL EP3 AND EP4
 -- Topics: 
 --          - Right click menu
+--			- Open LUA Prompt
+--			- Open OS code in IDE
 
 -- Variables  **********************************
     version = "1.2.6"
@@ -56,7 +58,7 @@ drawRightClickMenu = function(x, y)
             break
         -- open OS in lua IDE
         elseif button == 1 and xPos <= (x + 7) and xPos >= x and yPos == (y + 1) then
-            shell.run("edit", "/GNOOR1S_OS/gui_ep3") -- MAKE SURE TO START WITH "/"!
+            shell.run("edit", "/GNOOR1S_OS/gui_p2") -- MAKE SURE TO START WITH "/"!
             init()
             break
         -- return
