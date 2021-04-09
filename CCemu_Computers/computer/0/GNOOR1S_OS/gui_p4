@@ -1,9 +1,10 @@
 -- Code by GNOOR1S_OS
 -- he forgot ep5
--- ep6 --> https://www.youtube.com/watch?v=WysGuAHs440&list=PLj9MW6GM-9dlchydnAo9KGukVy2aMmorN&index=5
--- THIS VERSION FOLLOWS TUTORIAL EP6
+-- ep7 --> https://www.youtube.com/watch?v=1fvGtika810&list=PLj9MW6GM-9dlchydnAo9KGukVy2aMmorN&index=6
+-- THIS VERSION FOLLOWS TUTORIAL EP7
 -- Topics: 
---          - Fixes
+--          - Restart button
+
 
 -- Variables  **********************************
     version = "1.3.7"
