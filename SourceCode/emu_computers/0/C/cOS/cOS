@@ -1,0 +1,53 @@
+-- 1. check git for updates
+-- 2. loads APIS
+-- 3. other..
+-- 4. goes into runtime
+
+print("GUI: "..tostring(gui))
+
+-- Variables  **********************************
+    
+	version = "1.0.0"
+	directory = nil
+    running = true
+	
+-- Functions ***********************************
+	
+	local function getOsDirectory()
+		local osD = nil
+		local d = shell.dir()
+		shell.setDir(shell.getRunningProgram())
+		shell.run("cd ..")
+		osD = shell.dir()
+		shell.setDir(d)
+		return osD.."/"
+	end
+	
+	local runTime = function()
+		while running do
+			event, button, x, y = os.pullEvent("mouse_click")
+			if event =="mouse_click" then
+				gui.onClickEvent(event, button, x, y)
+			end
+		end
+	end
+	
+	local init = function()
+		directory = getOsDirectory()
+		print("cOS directory: "..tostring(directory))
+				print("pre loadAPI gui")
+
+		os.loadAPI(directory.."gui")
+		print("post loadAPI gui")
+		gui.init(this)
+		runTime()
+	end
+	
+	local stop = function() --exit OS
+		running = false
+		gui.stop()
+	end
+	
+-- Main Stuff  *********************************
+
+	init()

@@ -1,0 +1,105 @@
+-- cOS Color GUI
+
+-- Variables  **********************************
+
+	-- Paths
+	local bgImage_path = "/_images/desktop_img"
+
+	-- Colors
+	colTaskBar = colors.blue
+	colBackground = colors.gray
+		
+	-- Images
+	_dt = nil
+
+	-- Boolians
+	_ms = 0  -- menuSelected => the mode of the menu bar
+	_rcm = 0 -- right click menu
+		
+-- Functions ***********************************
+
+	clear = function()
+		--term.setBackgroundColor(colors.black)
+		term.clear()
+		term.setCursorPos(1, 1)
+	end
+	
+	drawMenu1 = function()
+		term.setCursorPos(1, 2)
+		term.setBackgroundColor(colors.orange)
+		term.setTextColor(colors.black)
+		print("[EXIT]")
+		term.setCursorPos(1, 3)
+		term.write("[REBOOT]")
+	end
+	
+	redraw = function()
+		drawDesktop()
+		drawTaskBar()
+	end
+	
+	drawTaskBar = function()
+		term.setCursorPos(1, 1)
+		term.setBackgroundColor(colTaskBar)
+		term.clearLine()
+		term.setCursorPos(1, 1)
+		term.setBackgroundColor(colors.lime)
+		term.setTextColor(colors.white)
+		term.write("[Menu]")
+	end
+
+	drawDesktop = function()
+		term.setBackgroundColor(colBackground)
+		clear()
+		--paintutils.drawImage(_dt, 1, 1)
+	end
+	
+	onClickEvent = function(event, button, x, y)
+		if _ms == 0 and button == 1 and x < 7 and y == 1 then
+            _ms = 1
+            drawMenu1()
+        elseif _ms == 1 and button == 1 and x < 7 and y == 2 then
+            stop()
+        elseif _ms == 1 and button == 1 and x < 7 and y == 1 then
+            init()
+        elseif _ms == 0 and _rcm == 0 and button == 2 then
+            _rcm = 1
+            --drawRightClickMenu(x, y)
+		elseif _ms == 1 and _rcm == 0 and button == 1 and x < 9 and y == 3 then
+			clear()
+			term.setBackgroundColor(colors.cyan)
+			term.clear()
+			term.setCursorPos(1, 1)
+			term.setTextColor(colors.lime)
+			term.write("Rebooting")
+			textutils.slowPrint("... Loading") ----> OUTPUTS CHAR AFTER CHAR!
+			sleep(1)
+			os.reboot() --> THIS IS MORE USEFULL (a startup would reboot the os)
+			--shell.run("/GNOOR1S_OS/gui_p3") --> this starts a new instance while this one is still running (dirty)
+			--init()
+			error()
+			--stop()
+        end
+	end
+	
+	stop = function() --exit OS
+		clear()
+		--running = false
+		term.setTextColor(colors.lime)
+		print("Thanks for using GNOS")
+		term.setTextColor(colors.white)
+		term.setBackgroundColor(colors.black)
+		sleep(1)
+		term.setCursorPos(1, 1)
+		term.clear()
+	end
+	
+	init = function(os)
+		print("initGUI: "..tostring(os))
+		_ms = 0
+		_rcm = 0
+		--_dt = paintutils.loadImage(bgImage_path)
+		drawDesktop()
+		drawTaskBar()
+	end
+	

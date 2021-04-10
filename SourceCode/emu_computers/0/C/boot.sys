@@ -1,10 +1,13 @@
 -- Load API manager
-shell.run("C/APIs/apiManager")
+--shell.run("C/APIs/apiManager")
 
 print("")
+print("startup...")
 print("Free space on C: "..tostring(fs.getFreeSpace("C")))
 
-sleep(3)
+sleep(1)
 
 term.clear()
 term.setCursorPos(1,1)
+
+shell.run("/C/cOS/cOS")
