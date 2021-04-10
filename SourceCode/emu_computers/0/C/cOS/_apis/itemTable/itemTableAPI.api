@@ -8,7 +8,7 @@
 -- getItem(uuid)
 
 local itemsTable
-local itemDump_Dir = "C/MyPrograms/APIs/itemTable/FTB_Lite1_ItemDump"
+local itemDump_Dir = "C/MyPrograms/APIs/itemTable/FTB_Lite1_ItemDump.td"
 
 --[[
 function getRawLines()

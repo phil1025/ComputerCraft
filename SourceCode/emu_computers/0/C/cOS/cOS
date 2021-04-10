@@ -10,6 +10,7 @@
     running = true
 	
 	local gui = nil
+	local apiMgr = nil
 	
 -- Functions ***********************************
 	
@@ -21,6 +22,15 @@
 		osD = shell.dir()
 		shell.setDir(d)
 		return osD.."/"
+	end
+	
+	local function loadApiManager()
+		local mgrDir = directory.."_apiMgr"
+		os.loadAPI(mgrDir)
+		apiMgr = _apiMgr
+		local apisDir = directory.."_apis/"
+		--print("apisDir: "..apisDir)
+		apiMgr.init(apisDir)
 	end
 	
 	local function loadGUI()
@@ -43,8 +53,12 @@
 	end
 	
 	local init = function()
+		print("Starting cOS...")
 		directory = getOsDirectory()
+		loadApiManager()
 		sleep(0.1)
+		print("finalizing...")
+		sleep(0.2)
 		loadGUI()
 		runTime()
 	end

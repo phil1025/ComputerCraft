@@ -5,8 +5,6 @@
 
 -- Variables  **********************************
 
-	-- Paths
-
 	-- Colors
 	colTaskBar = colors.blue
 	colBackground = colors.gray
@@ -97,6 +95,8 @@
 	end
 
 	init = function(imagesPath)
+		print("loading GUI: gui_adv")
+		sleep(0.7)
 		_ms = 0
 		_rcm = 0
 		if _dt == nil and imagesPath ~= nil then

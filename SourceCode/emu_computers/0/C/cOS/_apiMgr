@@ -1,0 +1,62 @@
+-- cOS API Manager
+
+-- Functions ***********************************
+
+	local function getFileNameElements(name)
+		local elements = {}
+		local index = 1
+		for e in string.gmatch(name, "[^%.]+") do
+			elements[index] = e
+			index = index + 1
+		end
+		return elements
+	end
+
+	function isAPI(name)
+		local elements = getFileNameElements(name)
+		if  elements ~= nil then
+			if #elements > 1 then
+				return elements[2] == "api"
+			end
+		end
+		return false
+	end
+
+	init = function(apisPath)
+		local cache = {}
+		cache[1] = apisPath
+		
+		_G.customAPIs = {}
+		
+		while #cache > 0 do
+			local path = cache[1]
+			table.remove(cache, 1)
+			local relPaths = fs.list(path)
+			for i = 1, #relPaths do
+				local p = path..relPaths[i]
+				if fs.isDir(p) then
+					--print(" - dir: "..tostring(p))
+					cache[#cache + 1] = p.."/"
+				else
+					--print("")
+					--print(" - file: "..tostring(p))
+					local fileName = relPaths[i]
+					if isAPI(fileName) then
+						local loaded = os.loadAPI(path..fileName)
+						local apiName = getFileNameElements(fileName)[1]
+						--_G[apiName] = _G[fileName]
+						_G.customAPIs[apiName] = _G[fileName]
+						if loaded then
+							print("using API: "..tostring(apiName))
+						else
+							term.setTextColor(colors.red)
+							print("Failed to load API: "..fileName)
+							term.setTextColor(colors.white)
+						end
+					end
+				end
+				sleep(0.1)
+			end
+		end
+		sleep(2)
+	end
