@@ -1,6 +1,9 @@
 -- **********************************************************************************************************
 -- API MANAGER 1.0
 --
+-- NOTE: could become a "Program" for loading APIs based on new cOS/_apiMgr approach
+-- 		 for managing apis if no cOS is installed/running.
+
 -- apiManager provides easy and dynamic access to apis located in the same directory 
 -- as the apiManager file itself
 --

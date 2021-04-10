@@ -47,7 +47,7 @@
 						--_G[apiName] = _G[fileName]
 						_G.customAPIs[apiName] = _G[fileName]
 						if loaded then
-							print("using API: "..tostring(apiName))
+							print("using API: "..tostring(apiName).." => "..tostring(customAPIs[apiName].name))
 						else
 							term.setTextColor(colors.red)
 							print("Failed to load API: "..fileName)

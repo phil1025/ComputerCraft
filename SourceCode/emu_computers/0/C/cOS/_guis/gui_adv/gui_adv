@@ -1,7 +1,9 @@
 -- cOS Color GUI
 
 -- => button / objects stuff could be outsourced into gui apis
--- => or see how classes could be used.. https://www.computercraft.info/wiki/Class
+-- => or look into how classes could be used...
+-- 		https://www.computercraft.info/wiki/Class
+--	    http://www.computercraft.info/forums2/index.php?/topic/14938-simple-object-oriented-programming/
 
 -- Variables  **********************************
 
@@ -54,18 +56,18 @@
 		paintutils.drawImage(_dt, 1, 1)
 	end
 	
-	onClickEvent = function(event, button, x, y)
-		if _ms == 0 and button == 1 and x < 7 and y == 1 then
+	onClickEvent = function(event, mouseButton, x, y)
+		if _ms == 0 and mouseButton == 1 and x < 7 and y == 1 then
             _ms = 1
             drawMenu1()
-        elseif _ms == 1 and button == 1 and x < 7 and y == 2 then
+        elseif _ms == 1 and mouseButton == 1 and x < 7 and y == 2 then
             stop()
-        elseif _ms == 1 and button == 1 and x < 7 and y == 1 then
+        elseif _ms == 1 and mouseButton == 1 and x < 7 and y == 1 then
             init()
-        elseif _ms == 0 and _rcm == 0 and button == 2 then
+        elseif _ms == 0 and _rcm == 0 and mouseButton == 2 then
             _rcm = 1
             --drawRightClickMenu(x, y)
-		elseif _ms == 1 and _rcm == 0 and button == 1 and x < 9 and y == 3 then
+		elseif _ms == 1 and _rcm == 0 and mouseButton == 1 and x < 9 and y == 3 then
 			clear()
 			term.setBackgroundColor(colors.cyan)
 			term.clear()

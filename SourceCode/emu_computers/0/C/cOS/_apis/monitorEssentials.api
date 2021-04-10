@@ -1,3 +1,9 @@
+-- Variables  **********************************
+
+	name = "monitorEssentials"
+
+-- Functions ***********************************
+
 function init(textScale)
     local monitor = nil
     if (peripheral.getType("right") == "monitor") then

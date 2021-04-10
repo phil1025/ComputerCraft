@@ -1,7 +1,15 @@
 --http://lua-users.org/wiki/SplitJoin
 
+-- Variables  **********************************
+
+	name = "stringUtils"
+
+-- Functions ***********************************
+
 --  CONTAINS
 function contains(string, keyword)
+	-- NOTE: should propably return string.find(string, keyword) == 1
+	--		 do some testing...
     return string.find(string, keyword)
 end
 

@@ -1,0 +1,8 @@
+--> lua classes http://www.computercraft.info/forums2/index.php?/topic/14938-simple-object-oriented-programming/
+
+-- should have a Rect object
+function createUI_Element()
+	e = {}
+	--e.
+
+end

@@ -6,6 +6,12 @@
 --.getFilesAll
 --.find (dir/file of name)
 
+-- Variables  **********************************
+
+	name = "fileSys"
+
+-- Functions ***********************************
+
 function getFreeDiskSpace(path)
     return fs.getFreeSpace(path)
 end

@@ -12,10 +12,15 @@
 	print("Free space on C: "..tostring(fs.getFreeSpace("C")))
 	sleep(1)
 
-	term.clear()
-	term.setCursorPos(1,1)
-
 	-- should be able to detect multiple bootable instances
 	-- should have config for boot preference etc..
-
-	shell.run("/C/cOS/cOS")
+	
+	print("")
+	print("Boot cOS? (y/n)")
+	local bootOS = tostring(read()) == "y"
+	if bootOS then
+		shell.run("/C/cOS/cOS")
+	else		
+		term.clear()
+		term.setCursorPos(1,1)
+	end

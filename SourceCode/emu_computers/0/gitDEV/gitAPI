@@ -1,3 +1,10 @@
+-- GIT API
+-- Provides the functions for fetching data from GIT
+-- NOTE: There should be a "Program" that provides more narrowed, purpose oriented functionality 
+--		 basically that would be the "AppStore"
+--		 cOS would just run that program´s api in background when checking for own updates => "Service Packs"-style
+--		 "AppStore" program provides a gui by itself, which is loaded if user start program from "dos" or from within "cOS"
+
 --[[
 GIT json data structure
 -------------------------------------------------
@@ -47,6 +54,16 @@ local function split(str, pat)
 end
 --]]
 
+	local function parseUrlElements(url)
+		local elements = {}
+		local index = 1
+		for e in string.gmatch(url, "[^%/]+") do
+			elements[index] = e
+			index = index + 1
+		end
+		return elements
+	end
+
 -- ************************ External functions ************************
 
 -- DOWNLOAD FILE
@@ -69,17 +86,42 @@ function get(itemPath, saveTo)
 end
 
 -- FETCH GIT Repo 
-function fetch()
+-- Usage: gitAPI.fetch(<path_key>, <type("tree"/"blob")>)
+-- No args returns full list
+function fetch(key, type)
     --> http://www.computercraft.info/forums2/index.php?/topic/28985-download-folder-from-github/
     --> Look up structure: https://docs.github.com/en/rest/reference/git#trees
     --> Git Repo: https://github.com/phil1025/ComputerCraft
-    
+    	
     local gitURL = "https://api.github.com/repos/phil1025/ComputerCraft/git/trees/main?recursive=1"
-    local request = http.get(gitURL)
+	local request = http.get(gitURL)
     local data = request.readAll()
     request.close()
     
-    os.loadAPI("gitDEV/json_lua-master/json_lua") --> IMPLEMENT apiManager
-    local decoded = json_lua.unwrap(data)
-    return decoded
+    os.loadAPI("/gitDEV/json_lua-master/json_lua") --> IMPLEMENT apiManager
+	
+	local tHeader = json_lua.unwrap(data)
+	print("tHeader: "..tostring(tHeader))
+	
+	
+	print("key: "..tostring(key))
+	
+	local tree = {}
+	for i = 1, #tHeader.tree do
+		local item = tHeader.tree[i]
+		if item ~= nil then
+			local pass = true
+			if key ~= nil and not (string.find(item.path, key) == 1) then
+				pass = false
+			elseif type ~= nil and not (tostring(item.type) == type) then
+				pass = false
+			end
+			if pass then
+				tree[#tree + 1] = item
+				print(" -> type: "..tostring(item.type).." item path: "..tostring(item.path))
+			end
+		end
+	end
+	tHeader.tree = tree	
+    return tHeader
 end
