@@ -1,0 +1,21 @@
+-- BIOS
+
+-- Variables  **********************************
+	
+	version = "1.0"
+
+-- Code 	  **********************************
+
+	print("")
+	print("BIOS "..version.." startup...")
+	sleep(1)
+	print("Free space on C: "..tostring(fs.getFreeSpace("C")))
+	sleep(1)
+
+	term.clear()
+	term.setCursorPos(1,1)
+
+	-- should be able to detect multiple bootable instances
+	-- should have config for boot preference etc..
+
+	shell.run("/C/cOS/cOS")
