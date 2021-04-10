@@ -1,9 +1,11 @@
 -- cOS Color GUI
 
+-- => button / objects stuff could be outsourced into gui apis
+-- => or see how classes could be used.. https://www.computercraft.info/wiki/Class
+
 -- Variables  **********************************
 
 	-- Paths
-	local bgImage_path = "/_images/desktop_img"
 
 	-- Colors
 	colTaskBar = colors.blue
@@ -51,7 +53,7 @@
 	drawDesktop = function()
 		term.setBackgroundColor(colBackground)
 		clear()
-		--paintutils.drawImage(_dt, 1, 1)
+		paintutils.drawImage(_dt, 1, 1)
 	end
 	
 	onClickEvent = function(event, button, x, y)
@@ -77,7 +79,7 @@
 			os.reboot() --> THIS IS MORE USEFULL (a startup would reboot the os)
 			--shell.run("/GNOOR1S_OS/gui_p3") --> this starts a new instance while this one is still running (dirty)
 			--init()
-			error()
+			--error()
 			--stop()
         end
 	end
@@ -93,12 +95,13 @@
 		term.setCursorPos(1, 1)
 		term.clear()
 	end
-	
-	init = function(os)
-		print("initGUI: "..tostring(os))
+
+	init = function(imagesPath)
 		_ms = 0
 		_rcm = 0
-		--_dt = paintutils.loadImage(bgImage_path)
+		if _dt == nil and imagesPath ~= nil then
+			_dt = paintutils.loadImage(imagesPath.."desktop_img")
+		end
 		drawDesktop()
 		drawTaskBar()
 	end

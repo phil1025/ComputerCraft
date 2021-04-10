@@ -3,13 +3,13 @@
 -- 3. other..
 -- 4. goes into runtime
 
-print("GUI: "..tostring(gui))
-
 -- Variables  **********************************
     
 	version = "1.0.0"
 	directory = nil
     running = true
+	
+	local gui = nil
 	
 -- Functions ***********************************
 	
@@ -23,6 +23,16 @@ print("GUI: "..tostring(gui))
 		return osD.."/"
 	end
 	
+	local function loadGUI()
+		-- atm only gui_adv
+		-- later loads other GUIs aswell => normal computer / turtle GUI
+		local guiDir = directory.."_guis/gui_adv/gui_adv"
+		os.loadAPI(guiDir)
+		gui = gui_adv
+		local imgDir = directory.."_images/"
+		gui.init(imgDir)
+	end
+	
 	local runTime = function()
 		while running do
 			event, button, x, y = os.pullEvent("mouse_click")
@@ -34,12 +44,8 @@ print("GUI: "..tostring(gui))
 	
 	local init = function()
 		directory = getOsDirectory()
-		print("cOS directory: "..tostring(directory))
-				print("pre loadAPI gui")
-
-		os.loadAPI(directory.."gui")
-		print("post loadAPI gui")
-		gui.init(this)
+		sleep(0.1)
+		loadGUI()
 		runTime()
 	end
 	
