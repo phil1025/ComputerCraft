@@ -1,0 +1,15 @@
+function init(textScale)
+    local monitor = nil
+    if (peripheral.getType("right") == "monitor") then
+        monitor = peripheral.wrap("right")
+    elseif (peripheral.getType("left") == "monitor") then
+        monitor = peripheral.wrap("left")
+    end
+
+    term.clear()
+    term.setCursorPos(1,1)
+
+    if monitor then
+        monitor.setTextScale(textScale)
+    end
+end
