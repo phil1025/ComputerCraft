@@ -5,54 +5,28 @@
 --		 cOS would just run that program´s api in background when checking for own updates => "Service Packs"-style
 --		 "AppStore" program provides a gui by itself, which is loaded if user start program from "dos" or from within "cOS"
 
---[[
-GIT json data structure
--------------------------------------------------
-"sha": "cd8274d15fa3ae2ab983129fb037999f264ba9a7",
-  "url": "https://api.github.com/repos/octocat/Hello-World/trees/cd8274d15fa3ae2ab983129fb037999f264ba9a7",
-  "tree": [
-    {
-      "path": "file.rb",
-      "mode": "100644",
-      "type": "blob",
-      "size": 132,
-      "sha": "7c258a9869f33c1e1e1f74fbb32f07c86cb5a75b",
-      "url": "https://api.github.com/repos/octocat/Hello-World/git/blobs/7c258a9869f33c1e1e1f74fbb32f07c86cb5a75b"
-    },
-    ...
--------------------------------------------------
---]]
 
--- ************************ Internal functions ************************
---[[
---  STRING SPLIT (port from stringUtilsAPI)
---  Compatibility: Lua-5.1
---  Example: Split a file path string into components.
---      function split_path(str)
---          return split(str,'[\\/]+')
---      end
---  parts = split_path("/usr/local/bin")
---  --> {'usr','local','bin'}
-local function split(str, pat)
-   --local t = {}  -- NOTE: use {n = 0} in Lua-5.0
-   local t = {n = 0}
-   local fpat = "(.-)" .. pat
-   local last_end = 1
-   local s, e, cap = str:find(fpat, 1)
-   while s do
-      if s ~= 1 or cap ~= "" then
-         table.insert(t, cap)
-      end
-      last_end = e+1
-      s, e, cap = str:find(fpat, last_end)
-   end
-   if last_end <= #str then
-      cap = str:sub(last_end)
-      table.insert(t, cap)
-   end
-   return t
-end
---]]
+-- GIT json data structure
+---------------------------------------------------
+-- "sha": "cd8274d15fa3ae2ab983129fb037999f264ba9a7",
+-- "url": "https://api.github.com/repos/octocat/Hello-World/trees/cd8274d15fa3ae2ab983129fb037999f264ba9a7",
+-- "tree": [
+-- {
+--	  "path": "file.rb",
+--    "mode": "100644",
+--    "type": "blob",
+--    "size": 132,
+--    "sha": "7c258a9869f33c1e1e1f74fbb32f07c86cb5a75b",
+--    "url": "https://api.github.com/repos/octocat/Hello-World/git/blobs/7c258a9869f33c1e1e1f74fbb32f07c86cb5a75b"
+-- },
+-- ...
+---------------------------------------------------
+
+-- Variables ************************
+	
+	name = "git"
+	
+-- Internal Functions ************************
 
 	local function parseUrlElements(url)
 		local elements = {}
@@ -64,67 +38,66 @@ end
 		return elements
 	end
 
--- ************************ External functions ************************
+-- External Functions ************************
 
 -- DOWNLOAD FILE
 -- For fetched repo tree items simply use "item.path"
-function download(itemPath, saveTo)
-    local mainPath = "https://raw.githubusercontent.com/phil1025/ComputerCraft/main/"
-    local data = http.get(mainPath..itemPath)
-    if data then
-        local handle = data.readAll()
-        data.close()
-        local file = fs.open(saveTo,"w")
-        file.write(handle)
-        file.close()
-        print("Downloaded "..itemPath.." to "..saveTo)
-    else 		
-		term.setTextColor(colors.red)
-        print("Unable to download the file "..itemPath)
-        print("Make sure you have the HTTP API enabled or")
-        print("an internet connection!")
-		term.setTextColor(colors.white)
-    end
-end
+	function download(itemPath, saveTo)
+		local mainPath = "https://raw.githubusercontent.com/phil1025/ComputerCraft/main/"
+		local data = http.get(mainPath..itemPath)
+		if data then
+			local handle = data.readAll()
+			data.close()
+			local file = fs.open(saveTo,"w")
+			file.write(handle)
+			file.close()
+			print("Downloaded "..itemPath.." to "..saveTo)
+		else 		
+			term.setTextColor(colors.red)
+			print("Unable to download the file "..itemPath)
+			print("Make sure you have the HTTP API enabled or")
+			print("an internet connection!")
+			term.setTextColor(colors.white)
+		end
+	end
 
 -- FETCH GIT Repo 
 -- Usage: gitAPI.fetch(<path_key>, <type("tree"/"blob")>)
 -- No args returns full list
-function fetch(key, type)
-    --> http://www.computercraft.info/forums2/index.php?/topic/28985-download-folder-from-github/
-    --> Look up structure: https://docs.github.com/en/rest/reference/git#trees
-    --> Git Repo: https://github.com/phil1025/ComputerCraft
-    	
-    local gitURL = "https://api.github.com/repos/phil1025/ComputerCraft/git/trees/main?recursive=1"
-	local request = http.get(gitURL)
-    local data = request.readAll()
-    request.close()
-    
-	os.loadAPI("/C/cOS/_apis/json_lua/json.api")
-	local json = _G["json.api"]
-	
-	local tHeader = json.unwrap(data)
-	print("tHeader: "..tostring(tHeader))
-	
-	
-	print("key: "..tostring(key))
-	
-	local tree = {}
-	for i = 1, #tHeader.tree do
-		local item = tHeader.tree[i]
-		if item ~= nil then
-			local pass = true
-			if key ~= nil and not (string.find(item.path, key) == 1) then
-				pass = false
-			elseif type ~= nil and not (tostring(item.type) == type) then
-				pass = false
-			end
-			if pass then
-				tree[#tree + 1] = item
-				print(" -> type: "..tostring(item.type).." item path: "..tostring(item.path))
+	function fetch(key, type)
+		--> http://www.computercraft.info/forums2/index.php?/topic/28985-download-folder-from-github/
+		--> Look up structure: https://docs.github.com/en/rest/reference/git#trees
+		--> Git Repo: https://github.com/phil1025/ComputerCraft
+			
+		local gitURL = "https://api.github.com/repos/phil1025/ComputerCraft/git/trees/main?recursive=1"
+		local request = http.get(gitURL)
+		local data = request.readAll()
+		request.close()
+		
+		os.loadAPI("/C/cOS/_apis/json_lua/json.api")
+		local json = _G["json.api"]
+		
+		local tHeader = json.unwrap(data)
+		print("tHeader: "..tostring(tHeader))
+		
+		print("key: "..tostring(key))
+		
+		local tree = {}
+		for i = 1, #tHeader.tree do
+			local item = tHeader.tree[i]
+			if item ~= nil then
+				local pass = true
+				if key ~= nil and not (string.find(item.path, key) == 1) then
+					pass = false
+				elseif type ~= nil and not (tostring(item.type) == type) then
+					pass = false
+				end
+				if pass then
+					tree[#tree + 1] = item
+					print(" -> type: "..tostring(item.type).." item path: "..tostring(item.path))
+				end
 			end
 		end
+		tHeader.tree = tree	
+		return tHeader
 	end
-	tHeader.tree = tree	
-    return tHeader
-end

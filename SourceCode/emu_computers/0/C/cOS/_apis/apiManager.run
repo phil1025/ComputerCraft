@@ -1,19 +1,22 @@
--- cOS API Manager
+-- API MANAGER 1.1.0
+-- loads all files with extension .api via os.loadAPI
+-- and creates a variable in _G => ex: _G.fileSys, _G.git,...
+-- APIs should be accessible by simply using their name => fileSys.doSomething()
 
 -- Functions ***********************************
 
-	local function getFileNameElements(name)
+	local function splitString(name, sep)
 		local elements = {}
 		local index = 1
-		for e in string.gmatch(name, "[^%.]+") do
+		for e in string.gmatch(name, "[^%"..sep.."]+") do
 			elements[index] = e
 			index = index + 1
 		end
 		return elements
 	end
 
-	function isAPI(name)
-		local elements = getFileNameElements(name)
+	local function isAPI(name)
+		local elements = splitString(name, ".")
 		if  elements ~= nil then
 			if #elements > 1 then
 				return elements[2] == "api"
@@ -22,7 +25,7 @@
 		return false
 	end
 
-	init = function(apisPath)
+	local loadAPIs = function(apisPath)
 		local cache = {}
 		cache[1] = apisPath
 		
@@ -43,11 +46,11 @@
 					local fileName = relPaths[i]
 					if isAPI(fileName) then
 						local loaded = os.loadAPI(path..fileName)
-						local apiName = getFileNameElements(fileName)[1]
-						--_G[apiName] = _G[fileName]
-						_G.customAPIs[apiName] = _G[fileName]
+						local apiName = splitString(fileName, ".")[1]
+						--_G.customAPIs[apiName] = _G[fileName]
+						_G[apiName] = _G[fileName]
 						if loaded then
-							print("using API: "..tostring(apiName).." => "..tostring(customAPIs[apiName].name))
+							print("using API: "..tostring(apiName).." => "..tostring(_G[apiName].name))
 						else
 							term.setTextColor(colors.red)
 							print("Failed to load API: "..fileName)
@@ -58,5 +61,14 @@
 				sleep(0.1)
 			end
 		end
-		sleep(2)
 	end
+	
+-- Main ***********************************
+	
+	local progPath = shell.getRunningProgram()
+	local elements = splitString(progPath, "/")	
+	local workDir = ""
+	for i = 1, (#elements - 1) do
+		workDir = workDir..elements[i].."/"
+	end
+	loadAPIs(workDir)

@@ -24,12 +24,18 @@
 		return osD.."/"
 	end
 	
-	local function loadApiManager()
-		local mgrDir = directory.."_apiMgr"
-		os.loadAPI(mgrDir)
-		apiMgr = _apiMgr
+	local function loadAPIs()
+		--[[
+		--local mgrDir = directory.."_apiMgr"
 		local apisDir = directory.."_apis/"
-		apiMgr.init(apisDir)
+		local mgrName = "apiManager.run"
+		local mgrDir = apisDir..mgrName
+		os.loadAPI(mgrDir)
+		apiMgr = _G("apiManager.run")
+		apiMgr.loadAPIs(apisDir)
+		--]]
+		
+		shell.run(directory.."_apis/apiManager.run")
 	end
 	
 	local function loadGUI()
@@ -54,8 +60,8 @@
 	local init = function()
 		print("Starting cOS...")
 		directory = getOsDirectory()
-		loadApiManager()
-		sleep(0.1)
+		loadAPIs()
+		sleep(2)
 		print("finalizing...")
 		sleep(0.2)
 		loadGUI()
