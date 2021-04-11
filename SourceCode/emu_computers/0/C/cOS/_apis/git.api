@@ -68,20 +68,22 @@ end
 
 -- DOWNLOAD FILE
 -- For fetched repo tree items simply use "item.path"
-function get(itemPath, saveTo)
+function download(itemPath, saveTo)
     local mainPath = "https://raw.githubusercontent.com/phil1025/ComputerCraft/main/"
-    local download = http.get(mainPath..itemPath)
-    if download then
-        local handle = download.readAll()
-        download.close()
+    local data = http.get(mainPath..itemPath)
+    if data then
+        local handle = data.readAll()
+        data.close()
         local file = fs.open(saveTo,"w")
         file.write(handle)
         file.close()
         print("Downloaded "..itemPath.." to "..saveTo)
-    else 
+    else 		
+		term.setTextColor(colors.red)
         print("Unable to download the file "..itemPath)
         print("Make sure you have the HTTP API enabled or")
         print("an internet connection!")
+		term.setTextColor(colors.white)
     end
 end
 
@@ -98,9 +100,10 @@ function fetch(key, type)
     local data = request.readAll()
     request.close()
     
-    os.loadAPI("/gitDEV/json_lua-master/json_lua") --> IMPLEMENT apiManager
+	os.loadAPI("/C/cOS/_apis/json_lua/json.api")
+	local json = _G["json.api"]
 	
-	local tHeader = json_lua.unwrap(data)
+	local tHeader = json.unwrap(data)
 	print("tHeader: "..tostring(tHeader))
 	
 	

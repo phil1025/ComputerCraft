@@ -1,3 +1,8 @@
+https://github.com/rxi/json.lua
+NOTE: created own file => json.api
+
+**************************************************************************
+
 # ![json.lua](https://cloud.githubusercontent.com/assets/3920290/9281532/99e5e0cc-42bd-11e5-8fce-eaff2f7fc681.png)
 A lightweight JSON library for Lua
 

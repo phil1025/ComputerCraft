@@ -13,14 +13,16 @@ end
 term.clear()
 term.setCursorPos(1, 1)
 
-os.loadAPI("gitDEV/gitAPI")
+os.loadAPI("/C/cOS/_apis/git.api")
+local gitAPI = _G["git.api"]
+
 print("gitAPI: "..tostring(gitAPI))
 
 --gitAPI.get("ComputerCraft_Notes.txt", "ComputerCraftNotesTest.txt")
 
 -- # FETCH REPO
 -- Usage: gitAPI.fetch(<path_key>, <type("tree"/"blob")>)
-local data = gitAPI.fetch("SourceCode/emu_computers/0", "tree")
+local data = gitAPI.fetch("SourceCode/emu_computers/0", "blob")
 
 -- **************************** DATA DEBUG ****************************
 --> Look up structure: https://docs.github.com/en/rest/reference/git#trees
@@ -53,4 +55,4 @@ local index = tonumber(read())
 
 local itemPath = data.tree[index].path
 print("itemPath: "..itemPath)
-gitAPI.get(itemPath, "gitTestDwnldFile")
+gitAPI.download(itemPath, "gitTestDwnldFile")

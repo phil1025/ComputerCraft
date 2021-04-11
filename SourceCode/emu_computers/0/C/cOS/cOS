@@ -29,7 +29,6 @@
 		os.loadAPI(mgrDir)
 		apiMgr = _apiMgr
 		local apisDir = directory.."_apis/"
-		--print("apisDir: "..apisDir)
 		apiMgr.init(apisDir)
 	end
 	
