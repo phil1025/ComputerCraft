@@ -1,0 +1,74 @@
+-- APP STORE
+
+-- Variables
+
+	version = "1.0.0"
+	
+	local running = true
+	local workDir = ""
+	
+	local gui = nil
+
+-- Functions
+
+	local function splitString(name, sep)
+		local elements = {}
+		local index = 1
+		for e in string.gmatch(name, "[^%"..sep.."]+") do
+			elements[index] = e
+			index = index + 1
+		end
+		return elements
+	end
+	
+	local loadGUI = function()
+		local guiDir = workDir.."_guis/"
+		--> should check term.isColor() => corresponding GUI
+		os.loadAPI(guiDir.."gui_norm")
+		gui = gui_norm
+		gui.init(version)
+	end
+
+	local colorRuntime = function()		
+		while running do
+			-- NOTE: mouse_click event might also only work with Advanced Computers!
+			--		 doesn´t need only different GUIs, but also runtime!
+			event, button, x, y = os.pullEvent("mouse_click")
+			if event =="mouse_click" then
+				--gui.onClickEvent(event, button, x, y)
+			end
+		end
+	end
+	
+	local normalRuntime = function()
+		while running do
+			event, button, x, y = os.pullEvent()
+			if tostring(event) == "key" then -- or tostring(event) == "char" then
+				gui.onClickEvent(event, button, x, y)
+				--print("event: "..tostring(event).." button: "..tostring(button).." xy: "..tostring(x)..", "..tostring(y))
+			end
+		end
+	end
+
+	local init = function()
+		print("isColor: "..tostring(term.isColor()))
+		
+		workDir = ""
+		local progPath = shell.getRunningProgram()
+		local elements = splitString(progPath, "/")
+		for i = 1, (#elements - 1) do
+			workDir = workDir..elements[i].."/"
+		end
+		
+		loadGUI()
+		
+		if term.isColor() then
+			colorRuntime()
+		else
+			normalRuntime()
+		end
+	end
+
+-- Main
+
+	init()

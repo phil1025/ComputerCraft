@@ -13,7 +13,18 @@
 	local apiMgr = nil
 	
 -- Functions ***********************************
+		
+	local function splitString(name, sep)
+		local elements = {}
+		local index = 1
+		for e in string.gmatch(name, "[^%"..sep.."]+") do
+			elements[index] = e
+			index = index + 1
+		end
+		return elements
+	end
 	
+	--[[
 	local function getOsDirectory()
 		local osD = nil
 		local d = shell.dir()
@@ -23,19 +34,40 @@
 		shell.setDir(d)
 		return osD.."/"
 	end
-	
+	--]]
+
+	local function getOsDirectory()
+		local workDir = ""
+		local progPath = shell.getRunningProgram()
+		local elements = splitString(progPath, "/")
+		for i = 1, (#elements - 1) do
+			workDir = workDir..elements[i].."/"
+		end
+		return workDir
+	end
+
 	local function loadAPIs()
-		--[[
-		--local mgrDir = directory.."_apiMgr"
-		local apisDir = directory.."_apis/"
-		local mgrName = "apiManager.run"
-		local mgrDir = apisDir..mgrName
-		os.loadAPI(mgrDir)
-		apiMgr = _G("apiManager.run")
-		apiMgr.loadAPIs(apisDir)
-		--]]
-		
-		shell.run(directory.."_apis/apiManager.run")
+		-- finds dir "../APIs/" and runs "apiManager.run"
+		local apiDir = ""
+		local progPath = shell.getRunningProgram()
+		local elements = splitString(progPath, "/")
+		local pathSet = false
+		for i = 1, #elements do
+			apiDir = apiDir..elements[i].."/"
+			local subs = fs.list(apiDir)
+			for n = 1, #subs do
+				print(" -sub: "..subs[n])
+				if subs[n] == "APIs" then
+					apiDir = apiDir..subs[n].."/"
+					pathSet = true
+					break
+				end
+			end
+			if pathSet then
+				break
+			end
+		end
+		shell.run(apiDir.."apiManager.run")
 	end
 	
 	local function loadGUI()
@@ -50,6 +82,8 @@
 	
 	local runTime = function()
 		while running do
+			-- NOTE: mouse_click event might also only work with Advanced Computers!
+			--		 doesn´t need only different GUIs, but also runtime!
 			event, button, x, y = os.pullEvent("mouse_click")
 			if event =="mouse_click" then
 				gui.onClickEvent(event, button, x, y)

@@ -84,6 +84,7 @@
         end
 	end
 	
+	-- NOT CALLED?
 	stop = function() --exit OS
 		clear()
 		--running = false

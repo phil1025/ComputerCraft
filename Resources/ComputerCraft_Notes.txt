@@ -46,6 +46,10 @@ more DB Attributes:
 - statistics | avg consumption/time, fillRate/time, etc...) => time (year, month, week, day, hour, minute) => draw graph curves with clickable datapoints!
 ------------------------------------------------
 -- IDEAS
+- Have a central turtle software management pc with proper gui program
+	-> allow turtle setups via wireless modem 
+	-> Main Program => turtle sub programs
+	
 - API Manager => an API that provides easy access to
 	         other APIs without need of dirPath
 			 

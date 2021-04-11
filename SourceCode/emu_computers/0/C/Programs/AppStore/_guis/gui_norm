@@ -1,0 +1,108 @@
+-- APP STORE GUI (Normal Computer)
+
+-- menu_bar => | Menu | Files | Installers | About |
+-- basically doesnt need sub menu_bar, just make button | EXIT |
+
+-- Variables
+
+	-- navID [tag, x, y]
+
+	local navTag = "menu_bar"
+	local menuBarIndex = 0
+	local menu_bar_1 = { "Exit", "Repo", "Programs", "APIs", "Data" }
+
+-- Functions
+
+	clear = function()
+		term.clear()
+		term.setCursorPos(1, 1)
+	end
+	
+	drawMenu1 = function()
+		term.setCursorPos(1, 2)
+		term.setBackgroundColor(colors.orange)
+		term.setTextColor(colors.black)
+		print("[EXIT]")
+		term.setCursorPos(1, 3)
+		term.write("[REBOOT]")
+	end
+	
+	drawTaskBar = function(selectedIndex)
+		term.setCursorPos(1, 1)
+		term.clearLine()
+		x, y = term.getCursorPos()
+		for i = 1, #menu_bar_1 do
+			local str = menu_bar_1[i]
+			if i == selectedIndex then
+				str = "["..str.."]"
+			end
+			term.write(str.." | ")
+		end
+	end
+	
+	local function drawStartScreen(version)
+		clear()
+		print("			*********************************")
+		print("			*********** App Store ***********")
+		print("			*********************************")
+		print(" 		version: "..tostring(version))
+		sleep(2)
+		clear()
+	end
+	
+	local function modulo(num, mod)
+		if num > mod then
+			num = 1
+		elseif num < 1 then
+			num = mod
+		end
+		return num
+	end
+
+	local function resolveAction(action)
+		print("funct. resolveAction => "..action)
+		-- return to OS -> get data => git.api
+	end
+
+	onClickEvent = function(event, button, x, y)
+		-- left = 203 | right = 205 | up = 200 | down = 208 | enter = 28 | return = 14
+		if tostring(event) == "key" then
+			if button == 203 then -- Left
+				if navTag == "menu_bar" then
+					menuBarIndex = modulo(menuBarIndex - 1, #menu_bar_1)
+					drawTaskBar(menuBarIndex)
+				end
+			elseif button == 205 then -- Right
+				if navTag == "menu_bar" then
+					menuBarIndex = modulo(menuBarIndex + 1, #menu_bar_1)
+					
+					drawTaskBar(menuBarIndex)
+				end
+			elseif button == 200 then -- Up
+				if navTag == "menu_bar" then
+				
+				end
+			elseif button == 208 then -- Down
+				if navTag == "menu_bar" then
+				
+				end
+			elseif button == 28 then -- Enter
+				if navTag == "menu_bar" and menuBarIndex > 0 then
+					local action = menu_bar_1[menuBarIndex]
+					resolveAction(action)
+				end
+			elseif button == 14 then -- Return
+				
+			end
+			--print("event: "..tostring(event).." button: "..tostring(button).." xy: "..tostring(x)..", "..tostring(y))
+		end
+		
+	end
+
+	init = function(version)
+		print("loading GUI: gui_norm......")
+		sleep(1)
+		menuBarIndex = 0
+		drawStartScreen(version)
+		drawTaskBar()
+	end
