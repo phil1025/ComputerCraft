@@ -8,6 +8,7 @@
 	local workDir = ""
 	
 	local gui = nil
+	local gitAPI = nil
 
 -- Functions
 
@@ -28,6 +29,122 @@
 		gui = gui_norm
 		gui.init(version)
 	end
+	
+	local loadGitAPI = function()
+		local apiPath = ""
+		local elements = splitString(workDir, "/")
+		for i = 1, (#elements - 2) do
+			apiPath = apiPath..elements[i].."/"
+		end
+		apiPath = apiPath.."APIs/"
+		local gitFilePath = apiPath.."git.api"
+		print("gitFilePath: "..gitFilePath)
+		os.loadAPI(gitFilePath)
+		gitAPI = _G["git.api"]
+		print("gitAPI: "..tostring(gitAPI))
+	end
+		
+	function actionHandle(action)
+		print("ACTION HANDLE: "..tostring(action))
+		if action == "Exit" then
+			exit()
+		elseif action == "Repo" then
+			return downloadGit()
+		elseif action == "Programs" then
+			return downloadGit("Programs")
+		elseif action == "APIs" then
+			return downloadGit("APIs")
+		elseif action == "Data" then
+			-- ...
+		else
+			print(" Err: Appstore.actionHandle() => Unknown action: "..tostring(action))
+		end
+	end
+	
+	function exit()
+		running = false
+		print("Exiting program...")
+		sleep(1)
+	end
+	
+	function downloadGit(key)
+		-- line 1 taskBar
+		-- line 2 page indicator, separation
+		-- line 3-18/19 content
+		
+		local pages = {}
+		
+		
+		
+		local url = ""
+		if key ~= nil then
+			url = "SourceCode/emu_computers/0/C/"..key
+		end
+		
+		
+		print("")
+		print("git url: "..url)
+		read()
+		local data = gitAPI.fetch(url)
+		local itemsPerPage = 10
+		
+		print("DOWNLOAD GIT key: "..tostring(key).." treeLEN: "..(#data.tree))
+		
+		local pageCount = math.floor(#data.tree / itemsPerPage + 0.5)
+		print("PAGE COUNT: "..pageCount)
+		
+		
+		local pIndex = 1
+		local itemIndex = 1
+		
+		for i = 1, pageCount do
+			local page = {}
+			
+			while pIndex < itemsPerPage and itemIndex < #data.tree do
+				local item = data.tree[itemIndex]
+				local elements = splitString(item.path, "/")
+				local itemName = elements[#elements]
+				if key == nil then
+					page[pIndex] = itemName
+					print("page[pI]: "..tostring(page[pIndex]))
+					pIndex = pIndex + 1
+				elseif key == "Programs" then
+					if item.type == "tree" then
+						page[pIndex] = itemName
+						pIndex = pIndex + 1
+					end
+				elseif key == "APIs" then
+					local nameElements = splitString(itemName, "/")
+					if #nameElements > 1 and nameElements[2] == "api" then
+						page[pIndex] = itemName
+						pIndex = pIndex + 1
+					end
+				elseif key == "Data" then
+				
+				else
+					print("Err: Appstore.downloadGit() => unknown key \""..tostring().."\"")
+				end
+				
+				itemIndex = itemIndex + 1
+				
+			
+				--print(" - item "..i..": "..tostring(itemName))
+			end
+			--[[
+			if #page == 0 then
+				break
+			end
+			--]]
+			
+			pIndex = 1
+			
+			-- CONTINUE HERE
+			pages[i] = page --> THIS DOES NOT WORK / ITS ALWAYS THE SAME OBJECT
+			--print("page "..i.." count: "..tostring(#page))
+		end
+		print("DOWNLOAD END")
+		return pages
+	end
 
 	local colorRuntime = function()		
 		while running do
@@ -35,16 +152,17 @@
 			--		 doesn´t need only different GUIs, but also runtime!
 			event, button, x, y = os.pullEvent("mouse_click")
 			if event =="mouse_click" then
+				
 				--gui.onClickEvent(event, button, x, y)
 			end
 		end
 	end
-	
+
 	local normalRuntime = function()
 		while running do
 			event, button, x, y = os.pullEvent()
 			if tostring(event) == "key" then -- or tostring(event) == "char" then
-				gui.onClickEvent(event, button, x, y)
+				gui.onClickEvent(event, button, x, y, actionHandle)
 				--print("event: "..tostring(event).." button: "..tostring(button).." xy: "..tostring(x)..", "..tostring(y))
 			end
 		end
@@ -61,7 +179,7 @@
 		end
 		
 		loadGUI()
-		
+		loadGitAPI()
 		if term.isColor() then
 			colorRuntime()
 		else

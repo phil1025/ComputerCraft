@@ -74,13 +74,12 @@
 		local data = request.readAll()
 		request.close()
 		
-		os.loadAPI("/C/cOS/_apis/json_lua/json.api")
+		os.loadAPI("/C/APIs/json_lua/json.api")
 		local json = _G["json.api"]
 		
 		local tHeader = json.unwrap(data)
-		print("tHeader: "..tostring(tHeader))
-		
-		print("key: "..tostring(key))
+		--print("tHeader: "..tostring(tHeader))
+		--print("key: "..tostring(key))
 		
 		local tree = {}
 		for i = 1, #tHeader.tree do
@@ -94,7 +93,7 @@
 				end
 				if pass then
 					tree[#tree + 1] = item
-					print(" -> type: "..tostring(item.type).." item path: "..tostring(item.path))
+					--print(" -> type: "..tostring(item.type).." item path: "..tostring(item.path))
 				end
 			end
 		end

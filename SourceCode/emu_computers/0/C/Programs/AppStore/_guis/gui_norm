@@ -7,11 +7,20 @@
 
 	-- navID [tag, x, y]
 
-	local navTag = "menu_bar"
-	local menuBarIndex = 0
-	local menu_bar_1 = { "Exit", "Repo", "Programs", "APIs", "Data" }
+	local navTag = "task_bar"
+	local taskBarIndex = 0
+	local taskBar = { "Exit", "Repo", "Programs", "APIs", "Data" }
 
 -- Functions
+
+	local function modulo(num, mod)
+		if num > mod then
+			num = 1
+		elseif num < 1 then
+			num = mod
+		end
+		return num
+	end
 
 	clear = function()
 		term.clear()
@@ -31,8 +40,8 @@
 		term.setCursorPos(1, 1)
 		term.clearLine()
 		x, y = term.getCursorPos()
-		for i = 1, #menu_bar_1 do
-			local str = menu_bar_1[i]
+		for i = 1, #taskBar do
+			local str = taskBar[i]
 			if i == selectedIndex then
 				str = "["..str.."]"
 			end
@@ -50,59 +59,48 @@
 		clear()
 	end
 	
-	local function modulo(num, mod)
-		if num > mod then
-			num = 1
-		elseif num < 1 then
-			num = mod
-		end
-		return num
+	function drawPage(data, index)
+		
 	end
-
-	local function resolveAction(action)
-		print("funct. resolveAction => "..action)
-		-- return to OS -> get data => git.api
-	end
-
-	onClickEvent = function(event, button, x, y)
+	
+	onClickEvent = function(event, button, x, y, actionHandle)
 		-- left = 203 | right = 205 | up = 200 | down = 208 | enter = 28 | return = 14
 		if tostring(event) == "key" then
 			if button == 203 then -- Left
-				if navTag == "menu_bar" then
-					menuBarIndex = modulo(menuBarIndex - 1, #menu_bar_1)
-					drawTaskBar(menuBarIndex)
+				if navTag == "task_bar" then
+					taskBarIndex = modulo(taskBarIndex - 1, #taskBar)
+					drawTaskBar(taskBarIndex)
 				end
 			elseif button == 205 then -- Right
-				if navTag == "menu_bar" then
-					menuBarIndex = modulo(menuBarIndex + 1, #menu_bar_1)
-					
-					drawTaskBar(menuBarIndex)
+				if navTag == "task_bar" then
+					taskBarIndex = modulo(taskBarIndex + 1, #taskBar)
+					drawTaskBar(taskBarIndex)
 				end
 			elseif button == 200 then -- Up
-				if navTag == "menu_bar" then
-				
+				if navTag == "task_bar" then
+					
 				end
 			elseif button == 208 then -- Down
-				if navTag == "menu_bar" then
-				
+				if navTag == "task_bar" then
+					
 				end
 			elseif button == 28 then -- Enter
-				if navTag == "menu_bar" and menuBarIndex > 0 then
-					local action = menu_bar_1[menuBarIndex]
-					resolveAction(action)
+				if navTag == "task_bar" and taskBarIndex > 0 then
+					local action = taskBar[taskBarIndex]
+					actionHandle(action)
+					action = nil
 				end
 			elseif button == 14 then -- Return
 				
 			end
 			--print("event: "..tostring(event).." button: "..tostring(button).." xy: "..tostring(x)..", "..tostring(y))
 		end
-		
 	end
 
 	init = function(version)
 		print("loading GUI: gui_norm......")
 		sleep(1)
-		menuBarIndex = 0
+		taskBarIndex = 0
 		drawStartScreen(version)
 		drawTaskBar()
 	end
