@@ -49,7 +49,7 @@
 		if action == "Exit" then
 			exit()
 		elseif action == "Repo" then
-			return downloadGit()
+			return downloadGit(nil)
 		elseif action == "Programs" then
 			return downloadGit("Programs")
 		elseif action == "APIs" then
@@ -74,7 +74,7 @@
 		
 		local pages = {}
 		
-		
+		print("DownloadGIT key: |"..tostring(key).."|")
 		
 		local url = ""
 		if key ~= nil then
@@ -84,7 +84,9 @@
 		
 		print("")
 		print("git url: "..url)
-		read()
+		
+		--read()
+		
 		local data = gitAPI.fetch(url)
 		local itemsPerPage = 10
 		
@@ -92,7 +94,6 @@
 		
 		local pageCount = math.floor(#data.tree / itemsPerPage + 0.5)
 		print("PAGE COUNT: "..pageCount)
-		
 		
 		local pIndex = 1
 		local itemIndex = 1
@@ -105,18 +106,17 @@
 				local elements = splitString(item.path, "/")
 				local itemName = elements[#elements]
 				if key == nil then
-					page[pIndex] = itemName
-					print("page[pI]: "..tostring(page[pIndex]))
+					page[pIndex] = item
 					pIndex = pIndex + 1
 				elseif key == "Programs" then
 					if item.type == "tree" then
-						page[pIndex] = itemName
+						page[pIndex] = item
 						pIndex = pIndex + 1
 					end
 				elseif key == "APIs" then
 					local nameElements = splitString(itemName, "/")
 					if #nameElements > 1 and nameElements[2] == "api" then
-						page[pIndex] = itemName
+						page[pIndex] = item
 						pIndex = pIndex + 1
 					end
 				elseif key == "Data" then
@@ -126,7 +126,6 @@
 				end
 				
 				itemIndex = itemIndex + 1
-				
 			
 				--print(" - item "..i..": "..tostring(itemName))
 			end

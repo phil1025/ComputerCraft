@@ -55,12 +55,19 @@
 		print("			*********** App Store ***********")
 		print("			*********************************")
 		print(" 		version: "..tostring(version))
-		sleep(2)
+		sleep(0.5)
 		clear()
 	end
 	
-	function drawPage(data, index)
-		
+	local pages = nil
+	
+	function drawPage(index)
+		--pages = data
+		print("PAGES: "..tostring(pages))
+		local page = pages[index]
+		for i = 1, #page do
+			print(" -> "..tostring(page[i].path))
+		end
 	end
 	
 	onClickEvent = function(event, button, x, y, actionHandle)
@@ -87,7 +94,8 @@
 			elseif button == 28 then -- Enter
 				if navTag == "task_bar" and taskBarIndex > 0 then
 					local action = taskBar[taskBarIndex]
-					actionHandle(action)
+					pages = actionHandle(action)
+					drawPage(1)
 					action = nil
 				end
 			elseif button == 14 then -- Return
@@ -99,7 +107,7 @@
 
 	init = function(version)
 		print("loading GUI: gui_norm......")
-		sleep(1)
+		sleep(0.3)
 		taskBarIndex = 0
 		drawStartScreen(version)
 		drawTaskBar()
