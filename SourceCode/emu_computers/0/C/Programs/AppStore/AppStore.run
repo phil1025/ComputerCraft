@@ -81,7 +81,6 @@
 			url = "SourceCode/emu_computers/0/C/"..key
 		end
 		
-		
 		print("")
 		print("git url: "..url)
 		
