@@ -10,7 +10,9 @@
 	local navTag = "task_bar"
 	local taskBarIndex = 0
 	local taskBar = { "Exit", "Repo", "Programs", "APIs", "Data" }
-
+	local itemsArr = nil
+	local selectedItemIndex = 1
+	
 -- Functions
 
 	local function modulo(num, mod)
@@ -58,45 +60,83 @@
 		sleep(0.5)
 		clear()
 	end
+
+	local function drawItems(selectedItemIndex, itemsDisplayed)
+		clear()
+		drawTaskBar(taskBarIndex)
+		print("")
+		print("")
+
+		print("***********************************************")
 	
-	local pages = nil
-	
-	function drawPage(index)
-		--pages = data
-		print("PAGES: "..tostring(pages))
-		local page = pages[index]
-		for i = 1, #page do
-			print(" -> "..tostring(page[i].path))
+		local endIndex = selectedItemIndex + itemsDisplayed
+		if endIndex > #itemsArr then
+			endIndex = #itemsArr
+		end
+		
+		local x, y = term.getCursorPos()
+		local yInc = 1
+		for i = selectedItemIndex, endIndex do
+			term.setCursorPos(1, y + yInc)
+			yInc = yInc + 1
+			local item = itemsArr[i]
+			if i == selectedItemIndex then
+				term.write(" -      ["..tostring(item.productName).."]")
+			else
+				term.write(" - "..tostring(item.productName))
+			end
 		end
 	end
 	
-	onClickEvent = function(event, button, x, y, actionHandle)
+	local function drawPage()
+		-- put all draw stuff here in the end
+	end
+		
+	onClickEvent = function(event, button, x, y, eventHandle)
 		-- left = 203 | right = 205 | up = 200 | down = 208 | enter = 28 | return = 14
 		if tostring(event) == "key" then
 			if button == 203 then -- Left
-				if navTag == "task_bar" then
-					taskBarIndex = modulo(taskBarIndex - 1, #taskBar)
-					drawTaskBar(taskBarIndex)
-				end
+				navTag = "task_bar"
+				taskBarIndex = modulo(taskBarIndex - 1, #taskBar)
+				drawTaskBar(taskBarIndex)
 			elseif button == 205 then -- Right
-				if navTag == "task_bar" then
-					taskBarIndex = modulo(taskBarIndex + 1, #taskBar)
-					drawTaskBar(taskBarIndex)
-				end
+				navTag = "task_bar"
+				taskBarIndex = modulo(taskBarIndex + 1, #taskBar)
+				drawTaskBar(taskBarIndex)
 			elseif button == 200 then -- Up
-				if navTag == "task_bar" then
-					
+				navTag == "item_page"
+				if itemsArr ~= nil then
+					selectedItemIndex = selectedItemIndex - 1
+					if selectedItemIndex < 1 then
+						selectedItemIndex = 1
+					elseif selectedItemIndex > #itemsArr then
+						selectedItemIndex = #itemsArr
+					end
+					drawItems(selectedItemIndex, 10)
 				end
 			elseif button == 208 then -- Down
-				if navTag == "task_bar" then
-					
+				navTag == "item_page"
+				if itemsArr ~= nil then
+					selectedItemIndex = selectedItemIndex + 1
+					if selectedItemIndex < 1 then
+						selectedItemIndex = 1
+					elseif selectedItemIndex > #itemsArr then
+						selectedItemIndex = #itemsArr
+					end
+					drawItems(selectedItemIndex, 10)
 				end
 			elseif button == 28 then -- Enter
 				if navTag == "task_bar" and taskBarIndex > 0 then
 					local action = taskBar[taskBarIndex]
-					pages = actionHandle(action)
-					drawPage(1)
+					itemsArr = eventHandle(action)
+					selectedItemIndex = 1
+					drawItems(selectedItemIndex, 10)
 					action = nil
+				else if navTag == "item_page" then
+					-- DOWNLOAD ITEM .inst
+					-- Readlines => install program & requirements
+					local selItem = itemsArr[selectedItemIndex]
+					---> CALL NEW ACTION FOR INSTALLING.. PASS PATH?
 				end
 			elseif button == 14 then -- Return
 				

@@ -44,8 +44,8 @@
 		print("gitAPI: "..tostring(gitAPI))
 	end
 		
-	function actionHandle(action)
-		print("ACTION HANDLE: "..tostring(action))
+	function eventHandle(action)
+		print("EVENT HANDLE action: "..tostring(action))
 		if action == "Exit" then
 			exit()
 		elseif action == "Repo" then
@@ -57,7 +57,7 @@
 		elseif action == "Data" then
 			-- ...
 		else
-			print(" Err: Appstore.actionHandle() => Unknown action: "..tostring(action))
+			print(" Err: Appstore.eventHandle() => Unknown action: "..tostring(action))
 		end
 	end
 	
@@ -68,12 +68,13 @@
 	end
 	
 	function downloadGit(key)
+		term.clear()
+		term.setCursorPos(1,1)
 		-- line 1 taskBar
 		-- line 2 page indicator, separation
 		-- line 3-18/19 content
 		
 		local items = {}
-		
 		print("DownloadGIT key: |"..tostring(key).."|")
 		
 		local url = ""
@@ -82,7 +83,6 @@
 			url = "SourceCode/releases/"..key.."/"
 		end
 		
-		print("")
 		print("git url: "..url)
 				
 		local data = gitAPI.fetch(url)
@@ -97,24 +97,15 @@
 			local item = data.tree[i]
 			local elements = splitString(item.path, "/")
 			local fileName = elements[#elements]
-			
 			if key == nil then
-
+				items[itemIndex] = item
+				itemIndex = itemIndex + 1
 			else
-			
-			--[[
-			elseif key == "OperationSystems" then
-			elseif key == "Programs" then
-			elseif key == "APIs" then
-			elseif key == "StaticData" then
-			--]]
-			
-			local _el = splitString(fileName, ".")
+				local _el = splitString(fileName, ".")
 				if #_el > 1 then
 					if _el[2] == "inst" then
 						item.fileName = fileName
 						item.productName = _el[1]
-						print(" productName: "..item.productName)
 						items[itemIndex] = item
 						itemIndex = itemIndex + 1
 					end
@@ -124,6 +115,8 @@
 				
 		print("DOWNLOAD END itemsCount: "..tostring(#items))
 		print("")
+		sleep(1)
+		
 		return items
 	end
 
@@ -143,7 +136,7 @@
 		while running do
 			event, button, x, y = os.pullEvent()
 			if tostring(event) == "key" then -- or tostring(event) == "char" then
-				gui.onClickEvent(event, button, x, y, actionHandle)
+				gui.onClickEvent(event, button, x, y, eventHandle)
 				--print("event: "..tostring(event).." button: "..tostring(button).." xy: "..tostring(x)..", "..tostring(y))
 			end
 		end
