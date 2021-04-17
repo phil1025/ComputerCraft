@@ -72,76 +72,59 @@
 		-- line 2 page indicator, separation
 		-- line 3-18/19 content
 		
-		local pages = {}
+		local items = {}
 		
 		print("DownloadGIT key: |"..tostring(key).."|")
 		
 		local url = ""
 		if key ~= nil then
-			url = "SourceCode/emu_computers/0/C/"..key
+			--url = "SourceCode/emu_computers/0/C/"..key
+			url = "SourceCode/releases/"..key.."/"
 		end
 		
 		print("")
 		print("git url: "..url)
-		
-		--read()
-		
+				
 		local data = gitAPI.fetch(url)
 		local itemsPerPage = 10
 		
 		print("DOWNLOAD GIT key: "..tostring(key).." treeLEN: "..(#data.tree))
 		
-		local pageCount = math.floor(#data.tree / itemsPerPage + 0.5)
-		print("PAGE COUNT: "..pageCount)
-		
-		local pIndex = 1
 		local itemIndex = 1
 		
-		for i = 1, pageCount do
-			local page = {}
+		for i = 1, #data.tree do
+			print("item "..i..": "..tostring(data.tree[i].path))
+			local item = data.tree[i]
+			local elements = splitString(item.path, "/")
+			local fileName = elements[#elements]
 			
-			while pIndex < itemsPerPage and itemIndex < #data.tree do
-				local item = data.tree[itemIndex]
-				local elements = splitString(item.path, "/")
-				local itemName = elements[#elements]
-				if key == nil then
-					page[pIndex] = item
-					pIndex = pIndex + 1
-				elseif key == "Programs" then
-					if item.type == "tree" then
-						page[pIndex] = item
-						pIndex = pIndex + 1
-					end
-				elseif key == "APIs" then
-					local nameElements = splitString(itemName, "/")
-					if #nameElements > 1 and nameElements[2] == "api" then
-						page[pIndex] = item
-						pIndex = pIndex + 1
-					end
-				elseif key == "Data" then
-				
-				else
-					print("Err: Appstore.downloadGit() => unknown key \""..tostring().."\"")
-				end
-				
-				itemIndex = itemIndex + 1
+			if key == nil then
+
+			else
 			
-				--print(" - item "..i..": "..tostring(itemName))
-			end
 			--[[
-			if #page == 0 then
-				break
-			end
+			elseif key == "OperationSystems" then
+			elseif key == "Programs" then
+			elseif key == "APIs" then
+			elseif key == "StaticData" then
 			--]]
 			
-			pIndex = 1
-			
-			-- CONTINUE HERE
-			pages[i] = page --> THIS DOES NOT WORK / ITS ALWAYS THE SAME OBJECT
-			--print("page "..i.." count: "..tostring(#page))
+			local _el = splitString(fileName, ".")
+				if #_el > 1 then
+					if _el[2] == "inst" then
+						item.fileName = fileName
+						item.productName = _el[1]
+						print(" productName: "..item.productName)
+						items[itemIndex] = item
+						itemIndex = itemIndex + 1
+					end
+				end
+			end
 		end
-		print("DOWNLOAD END")
-		return pages
+				
+		print("DOWNLOAD END itemsCount: "..tostring(#items))
+		print("")
+		return items
 	end
 
 	local colorRuntime = function()		
