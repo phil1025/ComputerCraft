@@ -104,7 +104,7 @@
 				taskBarIndex = modulo(taskBarIndex + 1, #taskBar)
 				drawTaskBar(taskBarIndex)
 			elseif button == 200 then -- Up
-				navTag == "item_page"
+				navTag = "item_page"
 				if itemsArr ~= nil then
 					selectedItemIndex = selectedItemIndex - 1
 					if selectedItemIndex < 1 then
@@ -115,7 +115,7 @@
 					drawItems(selectedItemIndex, 10)
 				end
 			elseif button == 208 then -- Down
-				navTag == "item_page"
+				navTag = "item_page"
 				if itemsArr ~= nil then
 					selectedItemIndex = selectedItemIndex + 1
 					if selectedItemIndex < 1 then
@@ -132,7 +132,8 @@
 					selectedItemIndex = 1
 					drawItems(selectedItemIndex, 10)
 					action = nil
-				else if navTag == "item_page" then
+				elseif navTag == "item_page" then
+					print("DOWNLOAD item: "..itemsArr[selectedItemIndex].productName)
 					-- DOWNLOAD ITEM .inst
 					-- Readlines => install program & requirements
 					local selItem = itemsArr[selectedItemIndex]
