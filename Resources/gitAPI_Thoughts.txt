@@ -50,3 +50,24 @@ some basic programs
 3. Software 
 	- "AppStore" => a So
 	- 
+	
+*******************************************************************************************
+
+FORGET ABOUT PREVIOUS ATTEMPT, ITS IMPOSSIBLE TO DOWNLOAD GIT.API WITHOUT IT!
+
+Thus git.api must be copied to computers from disk and depends on json.api.
+So it makes sense to just group a "basic bundle" of apis and programs, that have to come from disk.
+At least, the disk versions dont have to be updated, but just serve as a kick start. 
+Then apis etc should be compared to more recent versions on git.
+
+API essentials:
+- git.api
+- json.api
+- stringUtils.api
+- fileSys.api
+
+Program essentials:
+- apiManager.run??
+- AppStore.run??
+
+

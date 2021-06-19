@@ -15,12 +15,19 @@
 	-- should be able to detect multiple bootable instances
 	-- should have config for boot preference etc..
 	
-	print("")
-	print("Boot cOS? (y/n)")
-	local bootOS = tostring(read()) == "y"
-	if bootOS then
-		shell.run("/C/cOS/cOS")
-	else		
+	if fs.exists("/C/cOS/") then
+		print("")
+		print("Boot cOS? (y/n)")
+		local bootOS = tostring(read()) == "y"
+		if bootOS then
+			shell.run("/C/cOS/cOS")
+		else
+			term.clear()
+			term.setCursorPos(1,1)
+		end
+	else 
 		term.clear()
 		term.setCursorPos(1,1)
 	end
+	
+	
